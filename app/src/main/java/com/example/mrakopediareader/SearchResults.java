@@ -37,6 +37,10 @@ public class SearchResults extends AppCompatActivity {
         toast.show();
     }
 
+    private void handleClick(Page page) {
+        page.toString();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +50,7 @@ public class SearchResults extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new PageResultsAdapter(this.searchResults);
+        mAdapter = new PageResultsAdapter(this.searchResults, this::handleClick);
         recyclerView.setAdapter(mAdapter);
 
         this.requestQueue = Volley.newRequestQueue(this);
