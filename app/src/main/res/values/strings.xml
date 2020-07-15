@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Mrakopedia Reader</string>
+    <!-- Main activity UI resources -->
+    <string name="input_search"></string>
+    <string name="button_search">Искать</string>
+    <string name="default_search_input">Зеленая дверь</string>
+    <!-- Search activity UI resources -->
+
+    <!-- API paths -->
+    <string name="api_url">https://doc-pad-api.vercel.app</string>
+    <string name="api_search_path">/api/search</string>
+    <string name="api_page_path">/api/page</string>
+    <!--Intent keys -->
+    <string name="pass_search_string_intent_key">searchString</string>
+    <!--Notifications -->
+    <string name="failed_search_message">Невозможно выполнить поиск, попробуйте позднее</string>
+</resources>
