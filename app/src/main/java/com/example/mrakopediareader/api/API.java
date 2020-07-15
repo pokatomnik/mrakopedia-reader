@@ -15,18 +15,17 @@ import java.util.function.Consumer;
 
 public class API {
     private final String searchURL;
-    private final String pageURL;
+    private final String apiURL;
 
     public API(Resources resources) {
         final String apiURL = resources.getString(R.string.api_url);
         final String searchPath = resources.getString(R.string.api_search_path);
-        final String pagePath = resources.getString(R.string.api_page_path);
-        this.searchURL = apiURL + searchPath + "/";
-        this.pageURL = apiURL + pagePath + "/";
+        this.apiURL = apiURL;
+        this.searchURL = apiURL + searchPath;
     }
 
-    public String getPageURL(String pageTitle) {
-        return pageURL + pageTitle;
+    public String getFullPagePath(String pagePath) {
+        return apiURL + pagePath;
     }
 
     public JsonArrayRequest searchByText(
@@ -34,7 +33,7 @@ public class API {
         Consumer<ArrayList<Page>> pagesConsumer,
         Consumer<Exception> errorConsumer
     ) {
-        return new JsonArrayRequest(this.searchURL + search, (result) -> {
+        return new JsonArrayRequest(this.searchURL + "/" + search, (result) -> {
             ArrayList<Page> results = new ArrayList<>();
             for (int i = 0; i < result.length(); i++) {
                 try {

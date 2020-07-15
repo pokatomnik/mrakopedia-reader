@@ -12,6 +12,7 @@
     <string name="api_page_path">/api/page</string>
     <!--Intent keys -->
     <string name="pass_search_string_intent_key">searchString</string>
+    <string name="pass_page_url">pageUrl</string>
     <!--Notifications -->
     <string name="failed_search_message">Невозможно выполнить поиск, попробуйте позднее</string>
 </resources>

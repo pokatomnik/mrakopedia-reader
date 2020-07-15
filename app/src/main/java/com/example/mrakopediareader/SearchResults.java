@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -38,7 +40,12 @@ public class SearchResults extends AppCompatActivity {
     }
 
     private void handleClick(Page page) {
-        page.toString();
+        final Intent intent = new Intent(getBaseContext(), ViewPage.class);
+        intent.putExtra(
+                getResources().getString(R.string.pass_page_url),
+                this.api.getFullPagePath(page.getUrl())
+        );
+        startActivity(intent);
     }
 
     @Override
