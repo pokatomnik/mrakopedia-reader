@@ -1,5 +1,6 @@
 package com.example.mrakopediareader;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,13 +23,27 @@ import com.google.common.net.UrlEscapers;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.Subject;
+
 public class SearchResults extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
-    private RequestQueue requestQueue;
+
     private API api;
+
     private ArrayList<Page> searchResults = new ArrayList<>();
 
-    private void setLoading(boolean isLoading) {
+    private Subject<Boolean> loadingSubj$ = PublishSubject.create();
+
+    @Nullable
+    private Disposable resultsSub$;
+
+    @Nullable
+    private Disposable loadingSub$;
+
+    private void handleLoading(boolean isLoading) {
         final RecyclerView recyclerView = findViewById(R.id.searchResultsView);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         if (isLoading) {
@@ -44,15 +59,13 @@ public class SearchResults extends AppCompatActivity {
         this.searchResults.clear();
         this.searchResults.addAll(newResults);
         this.mAdapter.notifyDataSetChanged();
-        setLoading(false);
     }
 
-    private void handleError(Exception ignored) {
+    private void handleError(Throwable ignored) {
         final Context context = getApplicationContext();
         String text = getResources().getString(R.string.failed_search_message);
         final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
         toast.show();
-        setLoading(false);
     }
 
     private void handleClick(Page page) {
@@ -71,7 +84,7 @@ public class SearchResults extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.searchResultsView);
 
-        setLoading(true);
+        this.loadingSub$ = this.loadingSubj$.subscribe(this::handleLoading);
 
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -79,18 +92,27 @@ public class SearchResults extends AppCompatActivity {
         mAdapter = new PageResultsAdapter(this.searchResults, this::handleClick);
         recyclerView.setAdapter(mAdapter);
 
-        this.requestQueue = Volley.newRequestQueue(this);
-        this.api = new API(getResources());
+        this.api = new API(getResources(), Volley.newRequestQueue(this));
 
         final String nullableSearchText = getIntent()
                 .getStringExtra(getResources().getString(R.string.pass_search_string_intent_key));
 
-        Optional.ofNullable(nullableSearchText).ifPresent(searchText -> {
-            final String encoded = UrlEscapers.urlPathSegmentEscaper().escape(searchText);
-            final JsonArrayRequest request = api
-                    .searchByText(encoded, this::handleResults, this::handleError);
+        this.resultsSub$ = Observable
+                .just(Optional.ofNullable(nullableSearchText))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .distinctUntilChanged()
+                .doOnEach((ignored) -> SearchResults.this.loadingSubj$.onNext(true))
+                .map((searchText) -> UrlEscapers.urlPathSegmentEscaper().escape(searchText))
+                .switchMap((encoded) -> SearchResults.this.api.searchByText(encoded))
+                .doFinally(() -> SearchResults.this.loadingSubj$.onNext(false))
+                .subscribe(this::handleResults, this::handleError);
+    }
 
-            requestQueue.add(request);
-        });
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Optional.ofNullable(this.loadingSub$).ifPresent(Disposable::dispose);
+        Optional.ofNullable(this.resultsSub$).ifPresent(Disposable::dispose);
     }
 }
