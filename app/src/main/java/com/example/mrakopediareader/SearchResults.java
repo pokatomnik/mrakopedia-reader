@@ -17,13 +17,13 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Page;
+import com.google.common.net.UrlEscapers;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class SearchResults extends AppCompatActivity {
-    private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
     private RequestQueue requestQueue;
     private API api;
     private ArrayList<Page> searchResults = new ArrayList<>();
@@ -69,12 +69,12 @@ public class SearchResults extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
-        recyclerView = findViewById(R.id.searchResultsView);
+        RecyclerView recyclerView = findViewById(R.id.searchResultsView);
 
         setLoading(true);
 
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new PageResultsAdapter(this.searchResults, this::handleClick);
         recyclerView.setAdapter(mAdapter);
@@ -82,14 +82,15 @@ public class SearchResults extends AppCompatActivity {
         this.requestQueue = Volley.newRequestQueue(this);
         this.api = new API(getResources());
 
-        final String searchText = getIntent()
+        final String nullableSearchText = getIntent()
                 .getStringExtra(getResources().getString(R.string.pass_search_string_intent_key));
 
-        // TODO handle if the searchText is null or empty
+        Optional.ofNullable(nullableSearchText).ifPresent(searchText -> {
+            final String encoded = UrlEscapers.urlPathSegmentEscaper().escape(searchText);
+            final JsonArrayRequest request = api
+                    .searchByText(encoded, this::handleResults, this::handleError);
 
-        final JsonArrayRequest request = api
-                .searchByText(searchText, this::handleResults, this::handleError);
-
-        requestQueue.add(request);
+            requestQueue.add(request);
+        });
     }
 }
