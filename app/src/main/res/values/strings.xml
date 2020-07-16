@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Mrakopedia Reader</string>
     <!-- Main activity UI resources -->
+    <string name="input_search_caption">Поиск статьи</string>
     <string name="input_search"></string>
     <string name="button_search">Искать</string>
     <string name="default_search_input">Зеленая дверь</string>
