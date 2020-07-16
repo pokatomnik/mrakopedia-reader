@@ -2,10 +2,8 @@ package com.example.mrakopediareader.api;
 
 import android.content.res.Resources;
 
-import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.mrakopediareader.R;
-import com.google.gson.JsonArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;
