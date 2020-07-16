@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -26,10 +28,23 @@ public class SearchResults extends AppCompatActivity {
     private API api;
     private ArrayList<Page> searchResults = new ArrayList<>();
 
+    private void setLoading(boolean isLoading) {
+        final RecyclerView recyclerView = findViewById(R.id.searchResultsView);
+        final ProgressBar progressBar = findViewById(R.id.progressBar);
+        if (isLoading) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void handleResults(ArrayList<Page> newResults) {
         this.searchResults.clear();
         this.searchResults.addAll(newResults);
         this.mAdapter.notifyDataSetChanged();
+        setLoading(false);
     }
 
     private void handleError(Exception ignored) {
@@ -37,6 +52,7 @@ public class SearchResults extends AppCompatActivity {
         String text = getResources().getString(R.string.failed_search_message);
         final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
         toast.show();
+        setLoading(false);
     }
 
     private void handleClick(Page page) {
@@ -54,6 +70,9 @@ public class SearchResults extends AppCompatActivity {
         setContentView(R.layout.activity_search_results);
 
         recyclerView = findViewById(R.id.searchResultsView);
+
+        setLoading(true);
+
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
