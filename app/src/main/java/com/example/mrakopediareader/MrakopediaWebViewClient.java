@@ -6,22 +6,24 @@ import android.webkit.WebViewClient;
 
 import java.util.function.Consumer;
 
-class MrakopediaWebViewClient extends WebViewClient {
-    private Consumer<Boolean> loadingConsumer;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
-    MrakopediaWebViewClient(Consumer<Boolean> loadingConsumer) {
-        this.loadingConsumer = loadingConsumer;
-    }
+class MrakopediaWebViewClient extends WebViewClient {
+    private PublishSubject<Boolean> loadingSubject$ = PublishSubject.create();
 
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        this.loadingConsumer.accept(true);
+        this.loadingSubject$.onNext(true);
     }
 
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        this.loadingConsumer.accept(false);
+        this.loadingSubject$.onNext(false);
+    }
+
+    public PublishSubject<Boolean> getLoadingSubject() {
+        return this.loadingSubject$;
     }
 }
