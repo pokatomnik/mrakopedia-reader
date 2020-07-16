@@ -3,6 +3,7 @@
     <!-- Main activity UI resources -->
     <string name="input_search_caption">Поиск статьи</string>
     <string name="input_search"></string>
+    <string name="logo_content_description">Logo</string>
     <string name="button_search">Искать</string>
     <string name="default_search_input">Зеленая дверь</string>
     <!-- Search activity UI resources -->

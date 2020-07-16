@@ -17,6 +17,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/logo_content_description"
+            app:srcCompat="@drawable/comfy" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
