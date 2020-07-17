@@ -7,14 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Page;
@@ -35,7 +33,7 @@ public class SearchResults extends AppCompatActivity {
 
     private ArrayList<Page> searchResults = new ArrayList<>();
 
-    private Subject<Boolean> loadingSubj$ = PublishSubject.create();
+    private Subject<LoadingState> loadingSubj$ = PublishSubject.create();
 
     @Nullable
     private Disposable resultsSub$;
@@ -43,15 +41,31 @@ public class SearchResults extends AppCompatActivity {
     @Nullable
     private Disposable loadingSub$;
 
-    private void handleLoading(boolean isLoading) {
+    private void manageVisibility(LoadingState loadingState) {
         final RecyclerView recyclerView = findViewById(R.id.searchResultsView);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
-        if (isLoading) {
+        final TextView noItems = findViewById(R.id.noItems);
+        if (loadingState == LoadingState.HAS_ERROR) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            noItems.setVisibility(View.INVISIBLE);
+
+            final Context context = getApplicationContext();
+            final String text = getResources().getString(R.string.failed_search_message);
+            final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+            toast.show();
+        } else if (loadingState == LoadingState.LOADING) {
             recyclerView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
-        } else {
+            noItems.setVisibility(View.INVISIBLE);
+        } else if (loadingState == LoadingState.EMPTY) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            noItems.setVisibility(View.VISIBLE);
+        } else if (loadingState == LoadingState.HAS_RESULTS) {
             recyclerView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
+            noItems.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -62,10 +76,7 @@ public class SearchResults extends AppCompatActivity {
     }
 
     private void handleError(Throwable ignored) {
-        final Context context = getApplicationContext();
-        String text = getResources().getString(R.string.failed_search_message);
-        final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
-        toast.show();
+        this.loadingSubj$.onNext(LoadingState.HAS_ERROR);
     }
 
     private void handleClick(Page page) {
@@ -84,7 +95,7 @@ public class SearchResults extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.searchResultsView);
 
-        this.loadingSub$ = this.loadingSubj$.subscribe(this::handleLoading);
+        this.loadingSub$ = this.loadingSubj$.subscribe(this::manageVisibility);
 
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -102,10 +113,16 @@ public class SearchResults extends AppCompatActivity {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .distinctUntilChanged()
-                .doOnEach((ignored) -> SearchResults.this.loadingSubj$.onNext(true))
+                .doOnNext((ignored) -> SearchResults.this.loadingSubj$.onNext(LoadingState.LOADING))
                 .map((searchText) -> UrlEscapers.urlPathSegmentEscaper().escape(searchText))
                 .switchMap((encoded) -> SearchResults.this.api.searchByText(encoded))
-                .doFinally(() -> SearchResults.this.loadingSubj$.onNext(false))
+                .doOnNext((results) -> {
+                    if (results.size() == 0) {
+                        SearchResults.this.loadingSubj$.onNext(LoadingState.EMPTY);
+                    } else {
+                        SearchResults.this.loadingSubj$.onNext(LoadingState.HAS_RESULTS);
+                    }
+                })
                 .subscribe(this::handleResults, this::handleError);
     }
 

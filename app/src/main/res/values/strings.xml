@@ -17,4 +17,5 @@
     <string name="pass_page_url">pageUrl</string>
     <!--Notifications -->
     <string name="failed_search_message">Невозможно выполнить поиск, попробуйте позднее</string>
+    <string name="noItems">Поиск не дал результатов</string>
 </resources>

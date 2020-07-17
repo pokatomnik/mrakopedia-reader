@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import java.util.function.Consumer;
-
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 class MrakopediaWebViewClient extends WebViewClient {
