@@ -12,6 +12,7 @@
     <string name="api_url">https://doc-pad-api.vercel.app</string>
     <string name="api_search_path">/api/search</string>
     <string name="api_page_path">/api/page</string>
+    <string name="api_get_random_page">/api/random</string>
     <!--Intent keys -->
     <string name="pass_search_string_intent_key">searchString</string>
     <string name="pass_page_url">pageUrl</string>
@@ -25,11 +26,7 @@
     <string name="nav_header_subtitle">hugefast@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
+    <!-- Menu entries -->
+    <string name="menu_random_page">Случайная страница</string>
+    <string name="manu_categories">Список категорий</string>
 </resources>

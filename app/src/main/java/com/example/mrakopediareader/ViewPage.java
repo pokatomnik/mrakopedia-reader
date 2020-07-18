@@ -48,6 +48,6 @@ public class ViewPage extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Optional.of(this.loadingSub$).ifPresent(Disposable::dispose);
+        Optional.ofNullable(this.loadingSub$).ifPresent(Disposable::dispose);
     }
 }

@@ -29,6 +29,7 @@ import io.reactivex.rxjava3.subjects.Subject;
 public class SearchResults extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
 
+    @Nullable
     private API api;
 
     private ArrayList<Page> searchResults = new ArrayList<>();
@@ -80,12 +81,14 @@ public class SearchResults extends AppCompatActivity {
     }
 
     private void handleClick(Page page) {
-        final Intent intent = new Intent(getBaseContext(), ViewPage.class);
-        intent.putExtra(
-                getResources().getString(R.string.pass_page_url),
-                this.api.getFullPagePath(page.getUrl())
-        );
-        startActivity(intent);
+        Optional.ofNullable(this.api).ifPresent((api) -> {
+            final Intent intent = new Intent(getBaseContext(), ViewPage.class);
+            intent.putExtra(
+                    getResources().getString(R.string.pass_page_url),
+                    api.getFullPagePath(page.getUrl())
+            );
+            startActivity(intent);
+        });
     }
 
     @Override
