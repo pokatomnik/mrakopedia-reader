@@ -30,7 +30,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 
 public class SearchResults extends AppCompatActivity {
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter<PageResultsAdapter.ViewHolder> mAdapter;
 
     @Nullable
     private API api;
