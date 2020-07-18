@@ -1,9 +1,12 @@
 package com.example.mrakopediareader;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
@@ -32,6 +35,11 @@ public class ViewPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_page);
+
+        Optional.ofNullable(getSupportActionBar()).ifPresent(((actionBar) -> {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }));
+
         final String pageUrl = getIntent()
                 .getStringExtra(getResources().getString(R.string.pass_page_url));
         final WebView webView = findViewById(R.id.web_view);
@@ -43,6 +51,16 @@ public class ViewPage extends AppCompatActivity {
         webView.getSettings().setSupportMultipleWindows(false);
         webView.getSettings().setSupportZoom(false);
         webView.loadUrl(pageUrl);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+            this.onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

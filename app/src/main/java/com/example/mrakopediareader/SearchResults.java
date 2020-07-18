@@ -1,13 +1,16 @@
 package com.example.mrakopediareader;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -96,6 +99,10 @@ public class SearchResults extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
+        Optional.ofNullable(getSupportActionBar()).ifPresent(((actionBar) -> {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }));
+
         RecyclerView recyclerView = findViewById(R.id.searchResultsView);
 
         this.loadingSub$ = this.loadingSubj$.subscribe(this::manageVisibility);
@@ -127,6 +134,16 @@ public class SearchResults extends AppCompatActivity {
                     }
                 })
                 .subscribe(this::handleResults, this::handleError);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.home) {
+            this.onBackPressed();
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
