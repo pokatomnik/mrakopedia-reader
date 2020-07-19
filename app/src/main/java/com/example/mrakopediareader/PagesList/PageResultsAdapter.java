@@ -1,4 +1,4 @@
-package com.example.mrakopediareader;
+package com.example.mrakopediareader.PagesList;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mrakopediareader.R;
 import com.example.mrakopediareader.api.Page;
 
 import java.util.ArrayList;

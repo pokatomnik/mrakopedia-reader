@@ -15,6 +15,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.android.volley.toolbox.Volley;
+import com.example.mrakopediareader.PagesList.SearchResults;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Page;
 import com.google.android.material.navigation.NavigationView;
@@ -24,7 +25,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchResults">
+    tools:context=".PagesList.SearchResults">
 
     <TextView
         android:id="@+id/noItems"
@@ -14,7 +14,7 @@
         android:text="@string/noItems"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/searchResultsView"
+        app:layout_constraintEnd_toEndOf="@+id/pagesListView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchResultsView"
+        android:id="@+id/pagesListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:foreground="?android:attr/selectableItemBackground"

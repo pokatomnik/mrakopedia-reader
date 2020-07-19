@@ -34,6 +34,12 @@ public class API {
         this.requestQueue.add(request);
     }
 
+    private static Page jsonObjectToPage(JSONObject object) throws JSONException {
+        final String title = object.getString(KEY_TITLE);
+        final String url = object.getString(KEY_URL);
+        return new Page(title, url);
+    }
+
     public API(Resources resources, RequestQueue requestQueue) {
         final String apiURL = resources.getString(R.string.api_url);
         final String searchPath = resources.getString(R.string.api_search_path);
@@ -56,7 +62,7 @@ public class API {
             queueRequest(new JsonArrayRequest(
                     this.categoriesUrl,
                     (result) -> {
-                        final ArrayList<Category> categories = new ArrayList<>();
+                        final ArrayList<Category> categories = new ArrayList<>(result.length());
                         for (int i = 0; i < result.length(); i++) {
                             try {
                                 final JSONObject object = result.getJSONObject(i);
@@ -105,20 +111,45 @@ public class API {
         });
     }
 
+    public Observable<ArrayList<Page>> getPagesByCategory(
+            String categoryName
+    ) {
+        return Observable.create((resolver) -> {
+            queueRequest(new JsonArrayRequest(
+                    this.categoriesUrl + '/' + categoryName,
+                    (result) -> {
+                        final ArrayList<Page> results = new ArrayList<>();
+                        for (int i = 0; i < result.length(); i++) {
+                            try {
+                                results.add(jsonObjectToPage(result.getJSONObject(i)));
+                            } catch (JSONException e) {
+                                resolver.onError(PARSE_ERROR);
+                                resolver.onComplete();
+                                return;
+                            }
+                        }
+                        resolver.onNext(results);
+                        resolver.onComplete();
+                    },
+                    (error) -> {
+                        resolver.onError(new Throwable("Failed to fetch search results"));
+                        resolver.onComplete();
+                    }
+            ));
+        });
+    }
+
     public Observable<ArrayList<Page>> searchByText(
-        String search
+            String search
     ) {
         return Observable.create((resolver) -> {
             queueRequest(new JsonArrayRequest(
                     this.searchURL + "/" + search,
                     (result) -> {
-                        final ArrayList<Page> results = new ArrayList<>();
+                        final ArrayList<Page> results = new ArrayList<>(result.length());
                         for (int i = 0; i < result.length(); i++) {
                             try {
-                                final JSONObject object = result.getJSONObject(i);
-                                final String title = object.getString(KEY_TITLE);
-                                final String url = object.getString(KEY_URL);
-                                results.add(new Page(title, url));
+                                results.add(jsonObjectToPage(result.getJSONObject(i)));
                             } catch (JSONException e) {
                                 resolver.onError(PARSE_ERROR);
                                 resolver.onComplete();

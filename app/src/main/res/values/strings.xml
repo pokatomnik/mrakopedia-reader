@@ -14,9 +14,10 @@
     <string name="api_get_categories">/api/categories</string>
     <!--Intent keys -->
     <string name="pass_search_string_intent_key">searchString</string>
+    <string name="pass_category_name">categoryName</string>
     <string name="pass_page_url">pageUrl</string>
     <!--Notifications -->
-    <string name="failed_search_message">Невозможно выполнить поиск, попробуйте позднее</string>
+    <string name="failed_get_pages_message">Невозможно выполнить поиск, попробуйте позднее</string>
     <string name="failed_get_random_page_message">Невозможно получить случайную страницу, попробуйте позднее</string>
     <string name="failed_categories">Невозможно получить категории, попробуйте позднее</string>
     <string name="noItems">Поиск не дал результатов</string>

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mrakopediareader">
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Categories"></activity>
+        <activity android:name=".Categories" android:parentActivityName=".GeneralActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".GeneralActivity" />
+        </activity>
         <activity
             android:name=".ViewPage"
             android:parentActivityName=".GeneralActivity">
@@ -18,7 +21,14 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
-            android:name=".SearchResults"
+            android:name=".PagesList.SearchResults"
+            android:parentActivityName=".GeneralActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".GeneralActivity" />
+        </activity>
+        <activity
+            android:name=".PagesList.PagesByCategory"
             android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -30,12 +40,8 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
 </manifest>

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
+import com.example.mrakopediareader.PagesList.PagesByCategory;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Category;
 
@@ -81,14 +83,12 @@ public class Categories extends AppCompatActivity {
     }
 
     private void handleClick(Category category) {
-//        Optional.ofNullable(this.api).ifPresent((api) -> {
-//            final Intent intent = new Intent(getBaseContext(), ViewPage.class);
-//            intent.putExtra(
-//                    getResources().getString(R.string.pass_page_url),
-//                    api.getFullPagePath(category.getUrl())
-//            );
-//            startActivity(intent);
-//        });
+        final Intent intent = new Intent(getBaseContext(), PagesByCategory.class);
+        intent.putExtra(
+                getResources().getString(R.string.pass_category_name),
+                category.getTitle()
+        );
+        startActivity(intent);
     }
 
     @Override

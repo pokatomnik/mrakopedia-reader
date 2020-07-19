@@ -1,4 +1,4 @@
-package com.example.mrakopediareader;
+package com.example.mrakopediareader.PagesList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,9 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
+import com.example.mrakopediareader.LoadingState;
+import com.example.mrakopediareader.R;
+import com.example.mrakopediareader.ViewPage;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Page;
-import com.google.common.net.UrlEscapers;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -29,13 +31,13 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 
-public class SearchResults extends AppCompatActivity {
+abstract class PagesList extends AppCompatActivity {
     private RecyclerView.Adapter<PageResultsAdapter.ViewHolder> mAdapter;
 
     @Nullable
-    private API api;
+    protected API api;
 
-    private ArrayList<Page> searchResults = new ArrayList<>();
+    private ArrayList<Page> pagesList = new ArrayList<>();
 
     private Subject<LoadingState> loadingSubj$ = PublishSubject.create();
 
@@ -45,8 +47,10 @@ public class SearchResults extends AppCompatActivity {
     @Nullable
     private Disposable loadingSub$;
 
+    protected abstract Observable<ArrayList<Page>> getPages();
+
     private void manageVisibility(LoadingState loadingState) {
-        final RecyclerView recyclerView = findViewById(R.id.searchResultsView);
+        final RecyclerView recyclerView = findViewById(R.id.pagesListView);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         final TextView noItems = findViewById(R.id.noItems);
         if (loadingState == LoadingState.HAS_ERROR) {
@@ -55,7 +59,7 @@ public class SearchResults extends AppCompatActivity {
             noItems.setVisibility(View.INVISIBLE);
 
             final Context context = getApplicationContext();
-            final String text = getResources().getString(R.string.failed_search_message);
+            final String text = getResources().getString(R.string.failed_get_pages_message);
             final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
             toast.show();
         } else if (loadingState == LoadingState.LOADING) {
@@ -74,8 +78,8 @@ public class SearchResults extends AppCompatActivity {
     }
 
     private void handleResults(ArrayList<Page> newResults) {
-        this.searchResults.clear();
-        this.searchResults.addAll(newResults);
+        this.pagesList.clear();
+        this.pagesList.addAll(newResults);
         this.mAdapter.notifyDataSetChanged();
     }
 
@@ -97,40 +101,31 @@ public class SearchResults extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_results);
+        setContentView(R.layout.activity_pages_list);
 
         Optional.ofNullable(getSupportActionBar()).ifPresent(((actionBar) -> {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }));
 
-        RecyclerView recyclerView = findViewById(R.id.searchResultsView);
+        RecyclerView recyclerView = findViewById(R.id.pagesListView);
 
         this.loadingSub$ = this.loadingSubj$.subscribe(this::manageVisibility);
 
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new PageResultsAdapter(this.searchResults, this::handleClick);
+        mAdapter = new PageResultsAdapter(this.pagesList, this::handleClick);
         recyclerView.setAdapter(mAdapter);
 
         this.api = new API(getResources(), Volley.newRequestQueue(this));
 
-        final String nullableSearchText = getIntent()
-                .getStringExtra(getResources().getString(R.string.pass_search_string_intent_key));
-
-        this.resultsSub$ = Observable
-                .just(Optional.ofNullable(nullableSearchText))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .distinctUntilChanged()
-                .doOnNext((ignored) -> SearchResults.this.loadingSubj$.onNext(LoadingState.LOADING))
-                .map((searchText) -> UrlEscapers.urlPathSegmentEscaper().escape(searchText))
-                .switchMap((encoded) -> SearchResults.this.api.searchByText(encoded))
+        loadingSubj$.onNext(LoadingState.LOADING);
+        this.resultsSub$ = this.getPages()
                 .doOnNext((results) -> {
                     if (results.size() == 0) {
-                        SearchResults.this.loadingSubj$.onNext(LoadingState.EMPTY);
+                        loadingSubj$.onNext(LoadingState.EMPTY);
                     } else {
-                        SearchResults.this.loadingSubj$.onNext(LoadingState.HAS_RESULTS);
+                        loadingSubj$.onNext(LoadingState.HAS_RESULTS);
                     }
                 })
                 .subscribe(this::handleResults, this::handleError);
