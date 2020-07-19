@@ -6,18 +6,19 @@
     <string name="logo_content_description">Logo</string>
     <string name="button_search">Искать</string>
     <string name="default_search_input">Зеленая дверь</string>
-    <!-- Search activity UI resources -->
-
     <!-- API paths -->
     <string name="api_url">https://doc-pad-api.vercel.app</string>
     <string name="api_search_path">/api/search</string>
     <string name="api_page_path">/api/page</string>
     <string name="api_get_random_page">/api/random</string>
+    <string name="api_get_categories">/api/categories</string>
     <!--Intent keys -->
     <string name="pass_search_string_intent_key">searchString</string>
     <string name="pass_page_url">pageUrl</string>
     <!--Notifications -->
     <string name="failed_search_message">Невозможно выполнить поиск, попробуйте позднее</string>
+    <string name="failed_get_random_page_message">Невозможно получить случайную страницу, попробуйте позднее</string>
+    <string name="failed_categories">Невозможно получить категории, попробуйте позднее</string>
     <string name="noItems">Поиск не дал результатов</string>
     <string name="title_activity_general">Mrakopedia Reader</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

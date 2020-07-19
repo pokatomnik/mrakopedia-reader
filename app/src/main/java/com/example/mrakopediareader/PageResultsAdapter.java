@@ -50,8 +50,7 @@ class PageResultsAdapter extends RecyclerView.Adapter<PageResultsAdapter.ViewHol
     ) {
         LinearLayout layout = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.search_result_view, parent, false);
-        ViewHolder vh = new ViewHolder(layout, this.onClick);
-        return vh;
+        return new ViewHolder(layout, this.onClick);
     }
 
     @Override

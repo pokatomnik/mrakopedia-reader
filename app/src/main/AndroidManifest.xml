@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mrakopediareader">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,12 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewPage" android:parentActivityName=".GeneralActivity">
+        <activity android:name=".Categories"></activity>
+        <activity
+            android:name=".ViewPage"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
-        <activity android:name=".SearchResults" android:parentActivityName=".GeneralActivity">
+        <activity
+            android:name=".SearchResults"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
@@ -32,5 +35,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

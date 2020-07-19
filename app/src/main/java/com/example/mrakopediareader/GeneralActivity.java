@@ -152,7 +152,7 @@ public class GeneralActivity extends AppCompatActivity
 
     private void handleGetRandomPageFailed(Throwable ignored) {
         final Context context = getApplicationContext();
-        final String text = getResources().getString(R.string.failed_search_message);
+        final String text = getResources().getString(R.string.failed_get_random_page_message);
         final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
         toast.show();
     }
@@ -170,12 +170,12 @@ public class GeneralActivity extends AppCompatActivity
     }
 
     private void openCategories() {
-
+        final Intent intent = new Intent(getBaseContext(), Categories.class);
+        startActivity(intent);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         switch (id) {
