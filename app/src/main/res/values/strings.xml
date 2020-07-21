@@ -6,6 +6,8 @@
     <string name="logo_content_description">Logo</string>
     <string name="button_search">Искать</string>
     <string name="default_search_input">Зеленая дверь</string>
+    <string name="default_category">Фантасмагория</string>
+    <string name="category_search_hint">Поиск категории</string>
     <!-- API paths -->
     <string name="api_url">https://doc-pad-api.vercel.app</string>
     <string name="api_search_path">/api/search</string>

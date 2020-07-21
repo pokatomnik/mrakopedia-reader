@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +23,10 @@ import com.android.volley.toolbox.Volley;
 import com.example.mrakopediareader.PagesList.PagesByCategory;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Category;
+import com.google.common.base.Strings;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -34,7 +39,15 @@ public class Categories extends AppCompatActivity {
     @Nullable
     private API api;
 
-    private ArrayList<Category> categories = new ArrayList<>();
+    private Filterable<String, Category> categoryFilter =
+            new Filterable<>("", (search, category) -> {
+                if (Strings.isNullOrEmpty(search)) {
+                    return true;
+                }
+                return category.getTitle().toLowerCase().contains(search.toLowerCase());
+            });
+
+    private ArrayList<Category> filteredCategories = new ArrayList<>();
 
     private Subject<LoadingState> loadingSubj$ = PublishSubject.create();
 
@@ -44,12 +57,17 @@ public class Categories extends AppCompatActivity {
     @Nullable
     private Disposable loadingSub$;
 
+    @Nullable
+    private Disposable categoryFilterSub$;
+
     private void manageVisibility(LoadingState loadingState) {
         final RecyclerView recyclerView = findViewById(R.id.categoriesView);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         final TextView noItems = findViewById(R.id.noItems);
+        final EditText searchBy = findViewById(R.id.categoriesSearchBy);
         if (loadingState == LoadingState.HAS_ERROR) {
             recyclerView.setVisibility(View.INVISIBLE);
+            searchBy.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             noItems.setVisibility(View.INVISIBLE);
 
@@ -59,22 +77,25 @@ public class Categories extends AppCompatActivity {
             toast.show();
         } else if (loadingState == LoadingState.LOADING) {
             recyclerView.setVisibility(View.INVISIBLE);
+            searchBy.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
             noItems.setVisibility(View.INVISIBLE);
         } else if (loadingState == LoadingState.EMPTY) {
+            searchBy.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             noItems.setVisibility(View.VISIBLE);
         } else if (loadingState == LoadingState.HAS_RESULTS) {
+            searchBy.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             noItems.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void handleResults(ArrayList<Category> newCategories) {
-        this.categories.clear();
-        this.categories.addAll(newCategories);
+    private void updateFilteredResults(Collection<Category> newCategories) {
+        this.filteredCategories.clear();
+        this.filteredCategories.addAll(newCategories);
         this.mAdapter.notifyDataSetChanged();
     }
 
@@ -100,18 +121,33 @@ public class Categories extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }));
 
-        RecyclerView recyclerView = findViewById(R.id.categoriesView);
+        final RecyclerView recyclerView = findViewById(R.id.categoriesView);
+        final EditText searchText = findViewById(R.id.categoriesSearchBy);
+
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void afterTextChanged(Editable editable) {
+                categoryFilter.updateSearch(editable.toString());
+            }
+        });
 
         this.loadingSub$ = this.loadingSubj$.subscribe(this::manageVisibility);
 
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new CategoriesAdapter(this.categories, this::handleClick);
+        mAdapter = new CategoriesAdapter(this.filteredCategories, this::handleClick);
         recyclerView.setAdapter(mAdapter);
 
         this.api = new API(getResources(), Volley.newRequestQueue(this));
 
+        this.categoryFilterSub$ = this.categoryFilter
+                .getSearchResultSubj$()
+                .subscribe(this::updateFilteredResults);
         this.loadingSubj$.onNext(LoadingState.LOADING);
         this.resultsSub$ = this.api.getCategories()
                 .doOnNext((results) -> {
@@ -121,7 +157,9 @@ public class Categories extends AppCompatActivity {
                         loadingSubj$.onNext(LoadingState.HAS_RESULTS);
                     }
                 })
-                .subscribe(this::handleResults, this::handleError);
+                .subscribe((results) -> {
+                    this.categoryFilter.updateSource(results);
+                }, this::handleError);
     }
 
     @Override
@@ -139,5 +177,6 @@ public class Categories extends AppCompatActivity {
         super.onDestroy();
         Optional.ofNullable(this.loadingSub$).ifPresent(Disposable::dispose);
         Optional.ofNullable(this.resultsSub$).ifPresent(Disposable::dispose);
+        Optional.ofNullable(this.categoryFilterSub$).ifPresent(Disposable::dispose);
     }
 }
