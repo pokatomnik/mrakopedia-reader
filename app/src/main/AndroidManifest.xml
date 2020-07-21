@@ -35,6 +35,13 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
+            android:name=".PagesList.FavoritesList"
+            android:parentActivityName=".GeneralActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".GeneralActivity" />
+        </activity>
+        <activity
             android:name=".GeneralActivity"
             android:label="@string/title_activity_general"
             android:theme="@style/AppTheme.NoActionBar">

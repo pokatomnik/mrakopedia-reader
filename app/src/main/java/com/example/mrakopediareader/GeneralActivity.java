@@ -2,6 +2,7 @@ package com.example.mrakopediareader;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import android.text.Editable;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.android.volley.toolbox.Volley;
+import com.example.mrakopediareader.PagesList.FavoritesList;
 import com.example.mrakopediareader.PagesList.SearchResults;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Page;
@@ -142,9 +144,18 @@ public class GeneralActivity extends AppCompatActivity
     private void handleGetRandomPageSuccess(Page page) {
         Optional.ofNullable(this.api).ifPresent((api) -> {
             final Intent intent = new Intent(getBaseContext(), ViewPage.class);
+            final Resources resources = getResources();
             intent.putExtra(
-                    getResources().getString(R.string.pass_page_url),
+                    resources.getString(R.string.pass_page_url),
                     api.getFullPagePath(page.getUrl())
+            );
+            intent.putExtra(
+                    resources.getString(R.string.page_title),
+                    page.getTitle()
+            );
+            intent.putExtra(
+                    resources.getString(R.string.page_path),
+                    page.getUrl()
             );
             startActivity(intent);
         });
@@ -174,6 +185,11 @@ public class GeneralActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    private void openFavorites() {
+        final Intent intent = new Intent(getBaseContext(), FavoritesList.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -184,6 +200,9 @@ public class GeneralActivity extends AppCompatActivity
                 break;
             case R.id.nav_categories:
                 this.openCategories();
+                break;
+            case R.id.nav_favorites:
+                this.openFavorites();
                 break;
             default:
                 break;

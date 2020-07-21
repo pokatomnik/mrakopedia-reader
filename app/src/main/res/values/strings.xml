@@ -8,6 +8,8 @@
     <string name="default_search_input">Зеленая дверь</string>
     <string name="default_category">Фантасмагория</string>
     <string name="category_search_hint">Поиск категории</string>
+    <string name="add_to_to_favorites">Добавить в избранное</string>
+    <string name="remove_from_favorites">Удалить из избранного</string>
     <!-- API paths -->
     <string name="api_url">https://doc-pad-api.vercel.app</string>
     <string name="api_search_path">/api/search</string>
@@ -18,6 +20,8 @@
     <string name="pass_search_string_intent_key">searchString</string>
     <string name="pass_category_name">categoryName</string>
     <string name="pass_page_url">pageUrl</string>
+    <string name="page_title">pageTitle</string>
+    <string name="page_path">pagePath</string>
     <!--Notifications -->
     <string name="failed_get_pages_message">Невозможно выполнить поиск, попробуйте позднее</string>
     <string name="failed_get_random_page_message">Невозможно получить случайную страницу, попробуйте позднее</string>
@@ -29,8 +33,8 @@
     <string name="nav_header_title">Mrakopedia Reader</string>
     <string name="nav_header_subtitle">hugefast@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
     <!-- Menu entries -->
     <string name="menu_random_page">Случайная страница</string>
     <string name="manu_categories">Список категорий</string>
+    <string name="favorites">Избранное</string>
 </resources>

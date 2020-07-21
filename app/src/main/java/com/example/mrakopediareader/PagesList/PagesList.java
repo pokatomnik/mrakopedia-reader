@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,9 +91,18 @@ abstract class PagesList extends AppCompatActivity {
     private void handleClick(Page page) {
         Optional.ofNullable(this.api).ifPresent((api) -> {
             final Intent intent = new Intent(getBaseContext(), ViewPage.class);
+            final Resources resources = getResources();
             intent.putExtra(
-                    getResources().getString(R.string.pass_page_url),
+                    resources.getString(R.string.pass_page_url),
                     api.getFullPagePath(page.getUrl())
+            );
+            intent.putExtra(
+                    resources.getString(R.string.page_title),
+                    page.getTitle()
+            );
+            intent.putExtra(
+                    resources.getString(R.string.page_path),
+                    page.getUrl()
             );
             startActivity(intent);
         });
