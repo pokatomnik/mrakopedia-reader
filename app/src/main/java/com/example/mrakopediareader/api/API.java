@@ -3,6 +3,8 @@ package com.example.mrakopediareader.api;
 import android.content.res.Resources;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.mrakopediareader.R;
@@ -15,6 +17,9 @@ import java.util.ArrayList;
 import io.reactivex.rxjava3.core.Observable;
 
 public class API {
+    // Three minutes for super-long queries
+    private static int TIMEOUT = 1000 * 60 * 3;
+
     private static String KEY_TITLE = "title";
     private static String KEY_URL = "url";
     private static Throwable PARSE_ERROR = new Throwable("Failed to parse results");
@@ -27,6 +32,20 @@ public class API {
     private final String categoriesUrl;
 
     private void queueRequest(JsonArrayRequest request) {
+        request.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return TIMEOUT;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return TIMEOUT;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {}
+        });
         this.requestQueue.add(request);
     }
 
