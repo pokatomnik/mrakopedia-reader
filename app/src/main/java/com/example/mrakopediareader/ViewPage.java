@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
@@ -20,6 +21,11 @@ import java.util.Optional;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class ViewPage extends AppCompatActivity {
+    private final TextZoom textZoom = new TextZoom(100, 50, 200, 10);
+
+    @Nullable
+    private Disposable textZoomSub$;
+
     @Nullable
     private Disposable loadingSub$;
 
@@ -29,9 +35,9 @@ public class ViewPage extends AppCompatActivity {
     private String pagePath;
 
     private Menu menu;
+    private WebView webView;
 
     private void handleLoadingState(boolean isLoading) {
-        final WebView webView = findViewById(R.id.web_view);
         final ProgressBar progressBar = findViewById(R.id.pageLoadingProgressBar);
         if (isLoading) {
             webView.setVisibility(View.INVISIBLE);
@@ -45,8 +51,9 @@ public class ViewPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.favoritesStore = new FavoritesStore(getBaseContext());
         setContentView(R.layout.activity_view_page);
+        this.favoritesStore = new FavoritesStore(getBaseContext());
+        webView = findViewById(R.id.web_view);
 
         Optional.ofNullable(getSupportActionBar()).ifPresent(((actionBar) -> {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -58,7 +65,7 @@ public class ViewPage extends AppCompatActivity {
         pagePath = intent.getStringExtra(resources.getString(R.string.page_path));
         pageUrl = getIntent().getStringExtra(resources.getString(R.string.pass_page_url));
 
-        final WebView webView = findViewById(R.id.web_view);
+        this.textZoomSub$ = this.textZoom.getObservable().subscribe(this::setZoom);
         final MrakopediaWebViewClient webViewClient = new MrakopediaWebViewClient();
         this.loadingSub$ = webViewClient.getLoadingSubject().subscribe(this::handleLoadingState);
         webView.setWebViewClient(webViewClient);
@@ -67,6 +74,10 @@ public class ViewPage extends AppCompatActivity {
         webView.getSettings().setSupportMultipleWindows(false);
         webView.getSettings().setSupportZoom(false);
         webView.loadUrl(pageUrl);
+    }
+
+    private void setZoom(int zoomValue) {
+        webView.getSettings().setTextZoom(zoomValue);
     }
 
     private void toggleFavorite() {
@@ -84,15 +95,25 @@ public class ViewPage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-            this.onBackPressed();
-            return true;
-        } else if (item.getItemId() == R.id.favorites) {
-            this.toggleFavorite();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                this.onBackPressed();
+                return true;
+            case R.id.favorites:
+                this.toggleFavorite();
+                return true;
+            case R.id.zoom_in:
+                this.textZoom.zoomIn();
+                return true;
+            case R.id.zoom_out:
+                this.textZoom.zoomOut();
+                return true;
+            case R.id.reset_zoom:
+                this.textZoom.reset();
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -118,5 +139,6 @@ public class ViewPage extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Optional.ofNullable(this.loadingSub$).ifPresent(Disposable::dispose);
+        Optional.ofNullable(this.textZoomSub$).ifPresent(Disposable::dispose);
     }
 }

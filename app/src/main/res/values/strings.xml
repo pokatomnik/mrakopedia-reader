@@ -12,6 +12,7 @@
     <string name="remove_from_favorites">Удалить из избранного</string>
     <string name="zoom_in">Увеличить</string>
     <string name="zoom_out">Уменьшить</string>
+    <string name="reset_zoom">Сбросить масштаб</string>
     <!-- API paths -->
     <string name="api_url">https://doc-pad-api.vercel.app</string>
     <string name="api_search_path">/api/search</string>
