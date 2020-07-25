@@ -1,5 +1,10 @@
 package com.example.mrakopediareader.PagesList;
 
+import android.content.Intent;
+import android.os.Bundle;
+
+import androidx.appcompat.app.ActionBar;
+
 import com.example.mrakopediareader.R;
 import com.example.mrakopediareader.api.Page;
 import com.google.common.net.UrlEscapers;
@@ -10,6 +15,22 @@ import java.util.Optional;
 import io.reactivex.rxjava3.core.Observable;
 
 public class PagesByCategory extends PagesList {
+    private void setActionBarTitle(ActionBar actionBar) {
+        final Intent intent = getIntent();
+        final String nullableCategoryName = intent.getStringExtra(
+                getResources().getString(R.string.pass_category_name)
+        );
+        Optional.ofNullable(nullableCategoryName).ifPresent((categoryName) -> {
+            actionBar.setTitle("Категория: ".concat(categoryName));
+        });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Optional.ofNullable(getSupportActionBar()).ifPresent(this::setActionBarTitle);
+    }
+
     @Override
     protected Observable<ArrayList<Page>> getPages() {
         final String categoryNameNullable = getIntent()

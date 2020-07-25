@@ -8,42 +8,50 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Categories" android:parentActivityName=".GeneralActivity">
+        <activity
+            android:name=".Categories"
+            android:parentActivityName=".GeneralActivity"
+            android:label="Список категорий">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".ViewPage"
-            android:parentActivityName=".GeneralActivity">
+            android:parentActivityName=".GeneralActivity"
+            android:label="История">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".PagesList.SearchResults"
-            android:parentActivityName=".GeneralActivity">
+            android:parentActivityName=".GeneralActivity"
+            android:label="Результаты поиска">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".PagesList.PagesByCategory"
-            android:parentActivityName=".GeneralActivity">
+            android:parentActivityName=".GeneralActivity"
+            android:label="Истории по категории">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".PagesList.FavoritesList"
-            android:parentActivityName=".GeneralActivity">
+            android:parentActivityName=".GeneralActivity"
+            android:label="Избранное">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".PagesList.HOTMList"
-            android:parentActivityName=".GeneralActivity">
+            android:parentActivityName=".GeneralActivity"
+            android:label="Истории месяца">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
