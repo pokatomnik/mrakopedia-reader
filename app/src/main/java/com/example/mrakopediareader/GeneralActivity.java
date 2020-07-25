@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.android.volley.toolbox.Volley;
 import com.example.mrakopediareader.PagesList.FavoritesList;
+import com.example.mrakopediareader.PagesList.HOTMList;
 import com.example.mrakopediareader.PagesList.SearchResults;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Page;
@@ -189,6 +190,10 @@ public class GeneralActivity extends AppCompatActivity
         final Intent intent = new Intent(getBaseContext(), FavoritesList.class);
         startActivity(intent);
     }
+    private void openHotmPages() {
+        final Intent intent = new Intent(getBaseContext(), HOTMList.class);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -203,6 +208,9 @@ public class GeneralActivity extends AppCompatActivity
                 break;
             case R.id.nav_favorites:
                 this.openFavorites();
+                break;
+            case R.id.nav_hotm:
+                this.openHotmPages();
                 break;
             default:
                 break;

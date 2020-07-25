@@ -16,6 +16,7 @@
     <string name="api_page_path">/api/page</string>
     <string name="api_get_random_page">/api/random</string>
     <string name="api_get_categories">/api/categories</string>
+    <string name="api_get_hotm">/api/hotm</string>
     <!--Intent keys -->
     <string name="pass_search_string_intent_key">searchString</string>
     <string name="pass_category_name">categoryName</string>
@@ -37,4 +38,5 @@
     <string name="menu_random_page">Случайная страница</string>
     <string name="manu_categories">Список категорий</string>
     <string name="favorites">Избранное</string>
+    <string name="hotm">Истории месяца</string>
 </resources>

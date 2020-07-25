@@ -19,6 +19,11 @@
             android:checkable="false"
             android:icon="@android:drawable/star_big_off"
             android:title="@string/favorites" />
+        <item
+            android:id="@+id/nav_hotm"
+            android:checkable="false"
+            android:icon="@android:drawable/ic_menu_today"
+            android:title="@string/hotm" />
     </group>
 
 </menu>
