@@ -74,9 +74,11 @@ public class ViewPage extends AppCompatActivity {
         if (this.favoritesStore.has(this.pageTitle)) {
             this.favoritesStore.remove(this.pageTitle);
             menuItem.setTitle(R.string.add_to_to_favorites);
+            menuItem.setIcon(R.drawable.ic_fav_unselected);
         } else {
             this.favoritesStore.put(this.pageTitle, this.pagePath);
             menuItem.setTitle(R.string.remove_from_favorites);
+            menuItem.setIcon(R.drawable.ic_fav_selected);
         }
     }
 
@@ -103,8 +105,10 @@ public class ViewPage extends AppCompatActivity {
 
         if (favoritesStore.has(pageTitle)) {
             menuItem.setTitle(R.string.remove_from_favorites);
+            menuItem.setIcon(R.drawable.ic_fav_selected);
         } else {
             menuItem.setTitle(R.string.add_to_to_favorites);
+            menuItem.setIcon(R.drawable.ic_fav_unselected);
         }
 
         return true;

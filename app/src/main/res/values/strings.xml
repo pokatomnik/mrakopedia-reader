@@ -10,6 +10,8 @@
     <string name="category_search_hint">Поиск категории</string>
     <string name="add_to_to_favorites">Добавить в избранное</string>
     <string name="remove_from_favorites">Удалить из избранного</string>
+    <string name="zoom_in">Увеличить</string>
+    <string name="zoom_out">Уменьшить</string>
     <!-- API paths -->
     <string name="api_url">https://doc-pad-api.vercel.app</string>
     <string name="api_search_path">/api/search</string>
