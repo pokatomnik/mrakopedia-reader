@@ -53,7 +53,8 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:labelFor="@id/searchText"
-            android:text="@string/input_search" />
+            android:text="@string/input_search"
+            android:imeOptions="actionSearch" />
 
         <Button
             android:id="@+id/searchButton"
