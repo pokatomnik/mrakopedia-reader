@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -28,10 +29,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Optional;
@@ -70,7 +73,7 @@ public class GeneralActivity extends AppCompatActivity
     @Nullable
     private Disposable searchStringChangeSub$;
 
-    public void handleClick(View button) {
+    private void performSearch() {
         final Intent intent = new Intent(getBaseContext(), SearchResults.class);
 
         intent.putExtra(
@@ -78,6 +81,18 @@ public class GeneralActivity extends AppCompatActivity
                 this.inputSub$.getValue()
         );
         startActivity(intent);
+    }
+
+    public void handleClick(View button) {
+        performSearch();
+    }
+
+    public boolean handleKeyboardSearchTap(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            performSearch();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -97,7 +112,8 @@ public class GeneralActivity extends AppCompatActivity
         this.api = new API(getResources(), Volley.newRequestQueue(this));
 
         this.searchButton = findViewById(R.id.searchButton);
-        EditText editText = findViewById(R.id.searchText);
+        final EditText editText = findViewById(R.id.searchText);
+        editText.setOnEditorActionListener(this::handleKeyboardSearchTap);
 
         this.businessSub$ = this.busynessSubj$.subscribe(this::manageVisibility);
         this.inputSub$ = BehaviorSubject.createDefault("");
