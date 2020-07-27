@@ -51,10 +51,11 @@
             android:layout_height="wrap_content"
             android:autofillHints="@string/default_search_input"
             android:ems="10"
-            android:inputType="textPersonName"
             android:labelFor="@id/searchText"
             android:text="@string/input_search"
-            android:imeOptions="actionSearch" />
+            android:imeOptions="actionSearch"
+            android:maxLines="1"
+            android:inputType="text" />
 
         <Button
             android:id="@+id/searchButton"
