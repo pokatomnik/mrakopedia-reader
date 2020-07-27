@@ -21,4 +21,8 @@
         android:icon="@drawable/ic_zoom_reset"
         android:title="@string/reset_zoom"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_menu_share"
+        android:title="@string/share" />
 </menu>

@@ -7,20 +7,29 @@ import androidx.core.app.NavUtils;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.example.mrakopediareader.linkshare.LinkShare;
+import com.google.common.net.UrlEscapers;
+
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Optional;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class ViewPage extends AppCompatActivity {
+    private final LinkShare linkShare = new LinkShare();
     private final TextZoom textZoom = new TextZoom(100, 50, 200, 10);
 
     @Nullable
@@ -28,6 +37,9 @@ public class ViewPage extends AppCompatActivity {
 
     @Nullable
     private Disposable loadingSub$;
+
+    @Nullable
+    private Disposable linkShareSub$;
 
     private FavoritesStore favoritesStore;
     private String pageUrl;
@@ -48,6 +60,23 @@ public class ViewPage extends AppCompatActivity {
         }
     }
 
+    private void resolveIntent() {
+        final Resources resources = getResources();
+        final Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            final Uri uriNullable = intent.getData();
+            Optional.ofNullable(uriNullable).ifPresent((uri) -> {
+                pageTitle = uri.getPathSegments().get(2);
+                pagePath = uri.getEncodedPath();
+                pageUrl = uri.toString();
+            });
+        } else {
+            pageTitle = intent.getStringExtra(resources.getString(R.string.page_title));
+            pagePath = intent.getStringExtra(resources.getString(R.string.page_path));
+            pageUrl = getIntent().getStringExtra(resources.getString(R.string.pass_page_url));
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +88,7 @@ public class ViewPage extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }));
 
-        final Resources resources = getResources();
-        final Intent intent = getIntent();
-        pageTitle = intent.getStringExtra(resources.getString(R.string.page_title));
-        pagePath = intent.getStringExtra(resources.getString(R.string.page_path));
-        pageUrl = getIntent().getStringExtra(resources.getString(R.string.pass_page_url));
+        resolveIntent();
 
         this.textZoomSub$ = this.textZoom.getObservable().subscribe(this::setZoom);
         final MrakopediaWebViewClient webViewClient = new MrakopediaWebViewClient();
@@ -74,6 +99,19 @@ public class ViewPage extends AppCompatActivity {
         webView.getSettings().setSupportMultipleWindows(false);
         webView.getSettings().setSupportZoom(false);
         webView.loadUrl(pageUrl);
+
+        this.linkShareSub$ = this.linkShare.observeShare()
+                .subscribe(this::handleShare, this::handleShareFailed);
+    }
+
+    private void handleShare(Intent intent) {
+        startActivity(intent);
+    }
+
+    private void handleShareFailed(Throwable ignored) {
+        final String errorText = getResources().getString(R.string.share_error);
+        final Toast toast = Toast.makeText(getBaseContext(), errorText, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     private void setZoom(int zoomValue) {
@@ -111,6 +149,8 @@ public class ViewPage extends AppCompatActivity {
                 return true;
             case R.id.reset_zoom:
                 this.textZoom.reset();
+            case R.id.share:
+                this.linkShare.share(pageTitle, pageUrl);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -140,5 +180,6 @@ public class ViewPage extends AppCompatActivity {
         super.onDestroy();
         Optional.ofNullable(this.loadingSub$).ifPresent(Disposable::dispose);
         Optional.ofNullable(this.textZoomSub$).ifPresent(Disposable::dispose);
+        Optional.ofNullable(this.linkShareSub$).ifPresent(Disposable::dispose);
     }
 }
