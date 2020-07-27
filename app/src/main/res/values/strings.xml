@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY hostname "doc-pad-api.vercel.app">
+]>
 <resources>
     <string name="app_name">Mrakopedia Reader</string>
     <!-- Main activity UI resources -->
@@ -13,8 +17,10 @@
     <string name="zoom_in">Увеличить</string>
     <string name="zoom_out">Уменьшить</string>
     <string name="reset_zoom">Сбросить масштаб</string>
+    <string name="share">Поделиться</string>
     <!-- API paths -->
-    <string name="api_url">https://doc-pad-api.vercel.app</string>
+    <string name="api_hostname">&hostname;</string>
+    <string name="api_url">https://&hostname;</string>
     <string name="api_search_path">/api/search</string>
     <string name="api_page_path">/api/page</string>
     <string name="api_get_random_page">/api/random</string>
@@ -31,9 +37,11 @@
     <string name="failed_get_random_page_message">Невозможно получить случайную страницу, попробуйте позднее</string>
     <string name="failed_categories">Невозможно получить категории, попробуйте позднее</string>
     <string name="noItems">Поиск не дал результатов</string>
+    <string name="share_error">Невозможно поделиться. Если эта ошибка будет повторяться, дайте мне знать</string>
+    <!-- Menu strings -->
     <string name="title_activity_general">Mrakopedia Reader</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Открыть меню</string>
+    <string name="navigation_drawer_close">Закрыть меню</string>
     <string name="nav_header_title">Mrakopedia Reader</string>
     <string name="nav_header_subtitle">hugefast@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
