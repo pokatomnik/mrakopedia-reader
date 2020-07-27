@@ -18,12 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.mrakopediareader.linkshare.LinkShare;
-import com.google.common.net.UrlEscapers;
-
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.Optional;
 
 import io.reactivex.rxjava3.disposables.Disposable;
