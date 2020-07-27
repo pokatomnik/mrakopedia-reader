@@ -10,3 +10,4 @@ The mobile Android client for [Mrakopedia](https://mrakopedia.net).
 - Favorites
 - Stories of the month
 - Pages zoom
+- Sharing
