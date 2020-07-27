@@ -44,6 +44,10 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 public class GeneralActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @Nullable
+    private Contact contact;
+
     @Nullable
     private API api;
 
@@ -99,6 +103,9 @@ public class GeneralActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general);
+
+        contact = new Contact(getResources());
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -227,6 +234,19 @@ public class GeneralActivity extends AppCompatActivity
                 break;
             case R.id.nav_hotm:
                 this.openHotmPages();
+                break;
+            case R.id.nav_bug_or_enhancement:
+                Optional.ofNullable(this.contact)
+                        .ifPresent((contact) -> startActivity(contact.newIssue()));
+                break;
+            case R.id.nav_telegram:
+                Optional.ofNullable(this.contact)
+                        .ifPresent((contact) -> startActivity(contact.openTelegram()));
+                break;
+            case R.id.nav_email:
+                Optional
+                        .ofNullable(this.contact)
+                        .ifPresent((contact) -> startActivity(contact.openMailClient()));
                 break;
             default:
                 break;

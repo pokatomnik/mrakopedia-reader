@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/features"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_random_page"
             android:checkable="false"
@@ -24,6 +26,23 @@
             android:checkable="false"
             android:icon="@drawable/ic_calendar"
             android:title="@string/hotm" />
+    </group>
+    <group android:id="@+id/contact">
+        <item
+            android:id="@+id/nav_bug_or_enhancement"
+            android:checkable="false"
+            android:icon="@drawable/ic_bug"
+            android:title="@string/bug_or_enhancement" />
+        <item
+            android:id="@+id/nav_telegram"
+            android:checkable="false"
+            android:icon="@drawable/ic_telegram"
+            android:title="@string/contact_telegram" />
+        <item
+            android:id="@+id/nav_email"
+            android:checkable="false"
+            android:icon="@drawable/ic_email"
+            android:title="@string/contact_email" />
     </group>
 
 </menu>
