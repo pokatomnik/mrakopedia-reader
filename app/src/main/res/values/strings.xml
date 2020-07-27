@@ -50,4 +50,11 @@
     <string name="manu_categories">Список категорий</string>
     <string name="favorites">Избранное</string>
     <string name="hotm">Истории месяца</string>
+    <string name="bug_or_enhancement">Я нашел ошибку</string>
+    <string name="contact_telegram">Telegram</string>
+    <string name="contact_email">Email</string>
+    <!-- Links -->
+    <string name="report_issue">https://github.com/pokatomnik/mrakopedia-reader/issues</string>
+    <string name="open_telegram">https://t.me/pokatomnik</string>
+    <string name="open_email">mailto:hugefast@gmail.com</string>
 </resources>
