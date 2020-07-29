@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY hostname "doc-pad-api.vercel.app">
+    <!ENTITY hostname "mrakopedia.tk">
+    <!ENTITY legacy_hostname "doc-pad-api.vercel.app">
 ]>
 <resources>
     <string name="app_name">Mrakopedia Reader</string>
@@ -20,6 +21,7 @@
     <string name="share">Поделиться</string>
     <!-- API paths -->
     <string name="api_hostname">&hostname;</string>
+    <string name="legacy_api_hostname">&legacy_hostname;</string>
     <string name="api_url">https://&hostname;</string>
     <string name="api_search_path">/api/search</string>
     <string name="api_page_path">/api/page</string>
