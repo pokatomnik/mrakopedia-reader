@@ -3,29 +3,23 @@ package com.example.mrakopediareader.api;
 import android.content.res.Resources;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
+
 import com.example.mrakopediareader.R;
+import com.example.mrakopediareader.api.parser.CategoryParser;
+import com.example.mrakopediareader.api.parser.PageParser;
+import com.example.mrakopediareader.api.parser.Parser;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.reactivex.rxjava3.core.Observable;
 
-public class API {
-    // Three minutes for super-long queries
-    private static int TIMEOUT = 1000 * 60 * 3;
+public class API extends Queue {
+    private final Parser<Page> pageParser = new PageParser();
+    private final Parser<Category> categoryParser = new CategoryParser();
 
-    private static String KEY_TITLE = "title";
-    private static String KEY_URL = "url";
-    private static Throwable PARSE_ERROR = new Throwable("Failed to parse results");
-
-    private final RequestQueue requestQueue;
+    private final Throwable parseError;
 
     private final String searchURL;
     private final String randomURL;
@@ -33,7 +27,13 @@ public class API {
     private final String categoriesUrl;
     private final String hotmUrl;
 
+    private Resources resources;
+
     public API(Resources resources, RequestQueue requestQueue) {
+        super(requestQueue);
+        this.resources = resources;
+        this.parseError = new Throwable(resources.getString(R.string.error_parse));
+
         final String apiURL = resources.getString(R.string.api_url);
         final String searchPath = resources.getString(R.string.api_search_path);
         final String randomPath = resources.getString(R.string.api_get_random_page);
@@ -44,36 +44,6 @@ public class API {
         this.randomURL = apiURL + randomPath;
         this.categoriesUrl = apiURL + categoriesPath;
         this.hotmUrl = apiURL + hotmPath;
-
-        this.requestQueue = requestQueue;
-    }
-
-    private void queueRequest(JsonArrayRequest request) {
-        request.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return TIMEOUT;
-            }
-
-            @Override
-            public int getCurrentRetryCount() {
-                return TIMEOUT;
-            }
-
-            @Override
-            public void retry(VolleyError error) throws VolleyError {}
-        });
-        this.requestQueue.add(request);
-    }
-
-    private void queueRequest(JsonObjectRequest request) {
-        this.requestQueue.add(request);
-    }
-
-    private static Page jsonObjectToPage(JSONObject object) throws JSONException {
-        final String title = object.getString(KEY_TITLE);
-        final String url = object.getString(KEY_URL);
-        return new Page(title, url);
     }
 
     public String getFullPagePath(String pagePath) {
@@ -82,136 +52,107 @@ public class API {
 
     public Observable<ArrayList<Category>> getCategories() {
         return Observable.create((resolver) -> {
-            queueRequest(new JsonArrayRequest(
-                    this.categoriesUrl,
-                    (result) -> {
-                        final ArrayList<Category> categories = new ArrayList<>(result.length());
-                        for (int i = 0; i < result.length(); i++) {
-                            try {
-                                final JSONObject object = result.getJSONObject(i);
-                                final String title = object.getString(KEY_TITLE);
-                                final String url = object.getString(KEY_URL);
-                                categories.add(new Category(title, url));
-                            } catch (JSONException e) {
-                                resolver.onError(PARSE_ERROR);
-                                resolver.onComplete();
-                                return;
-                            }
-                        }
-                        resolver.onNext(categories);
+            jsonArrayRequest(
+                this.categoriesUrl,
+                (result) -> {
+                    try {
+                        resolver.onNext(categoryParser.fromJsonArray(result));
                         resolver.onComplete();
-                    },
-                    ((error) -> {
-                        resolver.onError(new Throwable("Failed to fetch categories"));
+                    } catch (JSONException e) {
+                        resolver.onError(parseError);
                         resolver.onComplete();
-                    })
-            ));
+                    }
+                },
+                ((error) -> {
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_categories)));
+                    resolver.onComplete();
+                })
+            );
         });
     }
 
     public Observable<Page> getRandomPage() {
         return Observable.create((resolver) -> {
-            queueRequest(new JsonObjectRequest(
-                    this.randomURL,
-                    null,
-                    (result) -> {
-                        try {
-                            final String title = result.getString(KEY_TITLE);
-                            final String url = result.getString(KEY_URL);
-                            resolver.onNext(new Page(title, url));
-                            resolver.onComplete();
-                        } catch (JSONException e) {
-                            resolver.onError(PARSE_ERROR);
-                            resolver.onComplete();
-                        }
-                    },
-                    (error) -> {
-                        resolver.onError(new Throwable("Failed to get random page"));
+            jsonObjectRequest(
+                this.randomURL,
+                (result) -> {
+                    try {
+                        resolver.onNext(pageParser.fromJsonObject(result));
+                        resolver.onComplete();
+                    } catch (JSONException e) {
+                        resolver.onError(parseError);
                         resolver.onComplete();
                     }
-            ));
+                },
+                (error) -> {
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_random_page)));
+                    resolver.onComplete();
+                }
+            );
 
         });
     }
 
-    public Observable<ArrayList<Page>> getPagesByCategory(
-            String categoryName
-    ) {
+    public Observable<ArrayList<Page>> getPagesByCategory(String categoryName) {
         return Observable.create((resolver) -> {
-            queueRequest(new JsonArrayRequest(
-                    this.categoriesUrl + '/' + categoryName,
-                    (result) -> {
-                        final ArrayList<Page> results = new ArrayList<>();
-                        for (int i = 0; i < result.length(); i++) {
-                            try {
-                                results.add(jsonObjectToPage(result.getJSONObject(i)));
-                            } catch (JSONException e) {
-                                resolver.onError(PARSE_ERROR);
-                                resolver.onComplete();
-                                return;
-                            }
-                        }
-                        resolver.onNext(results);
+            jsonArrayRequest(
+                this.categoriesUrl + '/' + categoryName,
+                (result) -> {
+                    try {
+                        resolver.onNext(pageParser.fromJsonArray(result));
                         resolver.onComplete();
-                    },
-                    (error) -> {
-                        resolver.onError(new Throwable("Failed to fetch search results"));
+                    } catch (JSONException e) {
+                        resolver.onError(parseError);
                         resolver.onComplete();
                     }
-            ));
+                },
+                (error) -> {
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_pages_by_category)));
+                    resolver.onComplete();
+                }
+            );
         });
     }
 
     public Observable<ArrayList<Page>> getHOTM() {
         return Observable.create((resolver) -> {
-            queueRequest(new JsonArrayRequest(
-                    this.hotmUrl,
-                    (results) -> {
-                        final ArrayList<Page> hotmPages = new ArrayList<>(results.length());
-                        for (int i = 0; i < results.length(); i++) {
-                            try {
-                                hotmPages.add(jsonObjectToPage(results.getJSONObject(i)));
-                            } catch (JSONException e) {
-                                resolver.onError(PARSE_ERROR);
-                                resolver.onComplete();
-                                return;
-                            }
-                        }
-                        resolver.onNext(hotmPages);
+            jsonArrayRequest(
+                this.hotmUrl,
+                (results) -> {
+                    try {
+                        resolver.onNext(pageParser.fromJsonArray(results));
                         resolver.onComplete();
-                    },
-                    (error) -> {
-                        resolver.onError(new Throwable("Failed to fetch histories of the month"));
+                    } catch (JSONException e) {
+                        resolver.onError(parseError);
                         resolver.onComplete();
                     }
-            ));
+                },
+                (error) -> {
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_stories_of_month)));
+                    resolver.onComplete();
+                }
+            );
         });
     }
 
-    public Observable<ArrayList<Page>> searchByText(
-            String search
-    ) {
+    public Observable<ArrayList<Page>> searchByText(String search) {
         return Observable.create((resolver) -> {
-            queueRequest(new JsonArrayRequest(
-                    this.searchURL + "/" + search,
-                    (result) -> {
-                        final ArrayList<Page> results = new ArrayList<>(result.length());
-                        for (int i = 0; i < result.length(); i++) {
-                            try {
-                                results.add(jsonObjectToPage(result.getJSONObject(i)));
-                            } catch (JSONException e) {
-                                resolver.onError(PARSE_ERROR);
-                                resolver.onComplete();
-                                return;
-                            }
-                        }
-                        resolver.onNext(results);
+            jsonArrayRequest(
+                this.searchURL + "/" + search,
+                (result) -> {
+                    try {
+                        resolver.onNext(pageParser.fromJsonArray(result));
                         resolver.onComplete();
-                    },
-                    (error) -> {
-                        resolver.onError(new Throwable("Failed to fetch search results"));
+                    } catch (JSONException e) {
+                        resolver.onError(parseError);
                         resolver.onComplete();
-                    }));
+                    }
+                },
+                (error) -> {
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_search_results)));
+                    resolver.onComplete();
+                }
+            );
         });
     }
 }
