@@ -59,4 +59,11 @@
     <string name="report_issue">https://github.com/pokatomnik/mrakopedia-reader/issues</string>
     <string name="open_telegram">https://t.me/pokatomnik</string>
     <string name="open_email">mailto:hugefast@gmail.com</string>
+    <!-- Fetch errors -->
+    <string name="error_parse">Некорректный ответ от сервера</string>
+    <string name="error_fetch_categories">Невозможно загрузить список категорий</string>
+    <string name="error_fetch_random_page">Невозможно загрузить случайную страницу</string>
+    <string name="error_fetch_pages_by_category">Невозможно загрузить список страниц по выбранной категории</string>
+    <string name="error_fetch_stories_of_month">Невоможно загрузить истории месяца</string>
+    <string name="error_fetch_search_results">Невозможно получить результаты поиска</string>
 </resources>

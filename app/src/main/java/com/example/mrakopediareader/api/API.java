@@ -3,27 +3,23 @@ package com.example.mrakopediareader.api;
 import android.content.res.Resources;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
+
 import com.example.mrakopediareader.R;
 import com.example.mrakopediareader.api.parser.CategoryParser;
 import com.example.mrakopediareader.api.parser.PageParser;
 import com.example.mrakopediareader.api.parser.Parser;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import io.reactivex.rxjava3.core.Observable;
 
 public class API extends Queue {
-    private Parser<Page> pageParser = new PageParser();
-    private Parser<Category> categoryParser = new CategoryParser();
+    private final Parser<Page> pageParser = new PageParser();
+    private final Parser<Category> categoryParser = new CategoryParser();
 
-    private static Throwable PARSE_ERROR = new Throwable("Failed to parse results");
+    private final Throwable parseError;
 
     private final String searchURL;
     private final String randomURL;
@@ -31,8 +27,13 @@ public class API extends Queue {
     private final String categoriesUrl;
     private final String hotmUrl;
 
+    private Resources resources;
+
     public API(Resources resources, RequestQueue requestQueue) {
         super(requestQueue);
+        this.resources = resources;
+        this.parseError = new Throwable(resources.getString(R.string.error_parse));
+
         final String apiURL = resources.getString(R.string.api_url);
         final String searchPath = resources.getString(R.string.api_search_path);
         final String randomPath = resources.getString(R.string.api_get_random_page);
@@ -58,12 +59,12 @@ public class API extends Queue {
                         resolver.onNext(categoryParser.fromJsonArray(result));
                         resolver.onComplete();
                     } catch (JSONException e) {
-                        resolver.onError(PARSE_ERROR);
+                        resolver.onError(parseError);
                         resolver.onComplete();
                     }
                 },
                 ((error) -> {
-                    resolver.onError(new Throwable("Failed to fetch categories"));
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_categories)));
                     resolver.onComplete();
                 })
             );
@@ -79,12 +80,12 @@ public class API extends Queue {
                         resolver.onNext(pageParser.fromJsonObject(result));
                         resolver.onComplete();
                     } catch (JSONException e) {
-                        resolver.onError(PARSE_ERROR);
+                        resolver.onError(parseError);
                         resolver.onComplete();
                     }
                 },
                 (error) -> {
-                    resolver.onError(new Throwable("Failed to get random page"));
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_random_page)));
                     resolver.onComplete();
                 }
             );
@@ -101,12 +102,12 @@ public class API extends Queue {
                         resolver.onNext(pageParser.fromJsonArray(result));
                         resolver.onComplete();
                     } catch (JSONException e) {
-                        resolver.onError(PARSE_ERROR);
+                        resolver.onError(parseError);
                         resolver.onComplete();
                     }
                 },
                 (error) -> {
-                    resolver.onError(new Throwable("Failed to fetch pages by category"));
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_pages_by_category)));
                     resolver.onComplete();
                 }
             );
@@ -122,12 +123,12 @@ public class API extends Queue {
                         resolver.onNext(pageParser.fromJsonArray(results));
                         resolver.onComplete();
                     } catch (JSONException e) {
-                        resolver.onError(PARSE_ERROR);
+                        resolver.onError(parseError);
                         resolver.onComplete();
                     }
                 },
                 (error) -> {
-                    resolver.onError(new Throwable("Failed to fetch histories of the month"));
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_stories_of_month)));
                     resolver.onComplete();
                 }
             );
@@ -143,12 +144,12 @@ public class API extends Queue {
                         resolver.onNext(pageParser.fromJsonArray(result));
                         resolver.onComplete();
                     } catch (JSONException e) {
-                        resolver.onError(PARSE_ERROR);
+                        resolver.onError(parseError);
                         resolver.onComplete();
                     }
                 },
                 (error) -> {
-                    resolver.onError(new Throwable("Failed to fetch search results"));
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_search_results)));
                     resolver.onComplete();
                 }
             );
