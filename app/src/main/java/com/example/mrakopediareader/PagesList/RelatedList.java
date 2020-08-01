@@ -14,14 +14,15 @@ import java.util.Optional;
 
 import io.reactivex.rxjava3.core.Observable;
 
-public class PagesByCategory extends PagesList {
+public class RelatedList extends PagesList {
     private void setActionBarTitle(ActionBar actionBar) {
         final Intent intent = getIntent();
-        final String nullableCategoryName = intent.getStringExtra(
-                getResources().getString(R.string.pass_category_name)
+        final String nullablePageTitle = intent.getStringExtra(
+                getResources().getString(R.string.pass_page_title)
         );
-        Optional.ofNullable(nullableCategoryName).ifPresent((categoryName) -> {
-            final String title = String.format("Категория: %s", categoryName);
+
+        Optional.ofNullable(nullablePageTitle).ifPresent((pageTitle) -> {
+            final String title = String.format("Похожие на \"%s\"", pageTitle);
             actionBar.setTitle(title);
         });
     }
@@ -34,16 +35,16 @@ public class PagesByCategory extends PagesList {
 
     @Override
     protected Observable<ArrayList<Page>> getPages() {
-        final String categoryNameNullable = getIntent()
-                .getStringExtra(getResources().getString(R.string.pass_category_name));
-        return Observable.just(Optional.ofNullable(categoryNameNullable))
+        final String titleNullable = getIntent()
+                .getStringExtra(getResources().getString(R.string.pass_page_title));
+        return Observable.just(Optional.ofNullable(titleNullable))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .distinctUntilChanged()
                 .map((categoryName) -> UrlEscapers.urlPathSegmentEscaper().escape(categoryName))
                 .switchMap((encoded) -> {
                     assert api != null;
-                    return api.getPagesByCategory(encoded);
+                    return api.getRelatedPages(encoded);
                 });
 
     }

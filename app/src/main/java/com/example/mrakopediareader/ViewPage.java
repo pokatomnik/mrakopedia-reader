@@ -17,6 +17,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.mrakopediareader.PagesList.RelatedList;
 import com.example.mrakopediareader.linkshare.LinkShare;
 import java.util.Optional;
 
@@ -65,8 +66,8 @@ public class ViewPage extends AppCompatActivity {
                 pageUrl = uri.toString();
             });
         } else {
-            pageTitle = intent.getStringExtra(resources.getString(R.string.page_title));
-            pagePath = intent.getStringExtra(resources.getString(R.string.page_path));
+            pageTitle = intent.getStringExtra(resources.getString(R.string.pass_page_title));
+            pagePath = intent.getStringExtra(resources.getString(R.string.pass_page_path));
             pageUrl = getIntent().getStringExtra(resources.getString(R.string.pass_page_url));
         }
     }
@@ -125,6 +126,12 @@ public class ViewPage extends AppCompatActivity {
         }
     }
 
+    private void openRelated() {
+        final Intent intent = new Intent(getBaseContext(), RelatedList.class);
+        intent.putExtra(getResources().getString(R.string.pass_page_title), this.pageTitle);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -143,8 +150,13 @@ public class ViewPage extends AppCompatActivity {
                 return true;
             case R.id.reset_zoom:
                 this.textZoom.reset();
+                return true;
             case R.id.share:
                 this.linkShare.share(pageTitle, pageUrl);
+                return true;
+            case R.id.related:
+                this.openRelated();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

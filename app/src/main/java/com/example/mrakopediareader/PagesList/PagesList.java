@@ -97,11 +97,11 @@ abstract class PagesList extends AppCompatActivity {
                     api.getFullPagePath(page.getUrl())
             );
             intent.putExtra(
-                    resources.getString(R.string.page_title),
+                    resources.getString(R.string.pass_page_title),
                     page.getTitle()
             );
             intent.putExtra(
-                    resources.getString(R.string.page_path),
+                    resources.getString(R.string.pass_page_path),
                     page.getUrl()
             );
             startActivity(intent);

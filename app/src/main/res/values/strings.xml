@@ -19,6 +19,7 @@
     <string name="zoom_out">Уменьшить</string>
     <string name="reset_zoom">Сбросить масштаб</string>
     <string name="share">Поделиться</string>
+    <string name="related">См. также</string>
     <!-- API paths -->
     <string name="api_hostname">&hostname;</string>
     <string name="legacy_api_hostname">&legacy_hostname;</string>
@@ -28,12 +29,13 @@
     <string name="api_get_random_page">/api/random</string>
     <string name="api_get_categories">/api/categories</string>
     <string name="api_get_hotm">/api/hotm</string>
+    <string name="api_get_page">/api/page</string>
     <!--Intent keys -->
     <string name="pass_search_string_intent_key">searchString</string>
     <string name="pass_category_name">categoryName</string>
     <string name="pass_page_url">pageUrl</string>
-    <string name="page_title">pageTitle</string>
-    <string name="page_path">pagePath</string>
+    <string name="pass_page_title">pageTitle</string>
+    <string name="pass_page_path">pagePath</string>
     <!--Notifications -->
     <string name="failed_get_pages_message">Невозможно выполнить поиск, попробуйте позднее</string>
     <string name="failed_get_random_page_message">Невозможно получить случайную страницу, попробуйте позднее</string>
@@ -66,4 +68,5 @@
     <string name="error_fetch_pages_by_category">Невозможно загрузить список страниц по выбранной категории</string>
     <string name="error_fetch_stories_of_month">Невоможно загрузить истории месяца</string>
     <string name="error_fetch_search_results">Невозможно получить результаты поиска</string>
+    <string name="error_fetch_related_pages">Невозможно загрузить похожие страницы</string>
 </resources>
