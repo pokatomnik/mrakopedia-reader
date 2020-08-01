@@ -89,6 +89,14 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
+            android:name=".PagesList.RelatedList"
+            android:parentActivityName=".GeneralActivity"
+            android:label="Похожие страницы">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".GeneralActivity" />
+        </activity>
+        <activity
             android:name=".GeneralActivity"
             android:label="@string/title_activity_general"
             android:theme="@style/AppTheme.NoActionBar">

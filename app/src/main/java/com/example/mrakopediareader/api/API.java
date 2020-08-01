@@ -26,6 +26,7 @@ public class API extends Queue {
     private final String apiURL;
     private final String categoriesUrl;
     private final String hotmUrl;
+    private final String pageUrl;
 
     private Resources resources;
 
@@ -39,11 +40,13 @@ public class API extends Queue {
         final String randomPath = resources.getString(R.string.api_get_random_page);
         final String categoriesPath = resources.getString(R.string.api_get_categories);
         final String hotmPath = resources.getString(R.string.api_get_hotm);
+        final String pagePath = resources.getString(R.string.api_get_page);
         this.apiURL = apiURL;
         this.searchURL = apiURL + searchPath;
         this.randomURL = apiURL + randomPath;
         this.categoriesUrl = apiURL + categoriesPath;
         this.hotmUrl = apiURL + hotmPath;
+        this.pageUrl = apiURL + pagePath;
     }
 
     public String getFullPagePath(String pagePath) {
@@ -150,6 +153,27 @@ public class API extends Queue {
                 },
                 (error) -> {
                     resolver.onError(new Throwable(resources.getString(R.string.error_fetch_search_results)));
+                    resolver.onComplete();
+                }
+            );
+        });
+    }
+
+    public Observable<ArrayList<Page>> getRelatedPages(String pageTitle) {
+        return Observable.create((resolver) -> {
+            jsonArrayRequest(
+                this.pageUrl + "/" + pageTitle + "/related",
+                (result) -> {
+                    try {
+                        resolver.onNext(pageParser.fromJsonArray(result));
+                        resolver.onComplete();
+                    } catch (JSONException e) {
+                        resolver.onError(parseError);
+                        resolver.onComplete();
+                    }
+                },
+                (error) -> {
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_related_pages)));
                     resolver.onComplete();
                 }
             );
