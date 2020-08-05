@@ -17,11 +17,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.android.volley.toolbox.Volley;
-import com.example.mrakopediareader.PagesList.FavoritesList;
-import com.example.mrakopediareader.PagesList.HOTMList;
-import com.example.mrakopediareader.PagesList.SearchResults;
+import com.example.mrakopediareader.pageslist.FavoritesList;
+import com.example.mrakopediareader.pageslist.HOTMList;
+import com.example.mrakopediareader.pageslist.SearchResults;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Page;
+import com.example.mrakopediareader.categorieslist.AllCategories;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -205,7 +206,7 @@ public class GeneralActivity extends AppCompatActivity
     }
 
     private void openCategories() {
-        final Intent intent = new Intent(getBaseContext(), Categories.class);
+        final Intent intent = new Intent(getBaseContext(), AllCategories.class);
         startActivity(intent);
     }
 

@@ -1,4 +1,4 @@
-package com.example.mrakopediareader.PagesList;
+package com.example.mrakopediareader.pageslist;
 
 import com.example.mrakopediareader.FavoritesStore;
 import com.example.mrakopediareader.api.Page;

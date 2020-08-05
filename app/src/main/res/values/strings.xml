@@ -20,6 +20,7 @@
     <string name="reset_zoom">Сбросить масштаб</string>
     <string name="share">Поделиться</string>
     <string name="related">См. также</string>
+    <string name="categories_by_page">Категории</string>
     <!-- API paths -->
     <string name="api_hostname">&hostname;</string>
     <string name="legacy_api_hostname">&legacy_hostname;</string>
@@ -64,6 +65,7 @@
     <!-- Fetch errors -->
     <string name="error_parse">Некорректный ответ от сервера</string>
     <string name="error_fetch_categories">Невозможно загрузить список категорий</string>
+    <string name="error_fetch_categories_by_page">Невозможно загрузить список категорий истории</string>
     <string name="error_fetch_random_page">Невозможно загрузить случайную страницу</string>
     <string name="error_fetch_pages_by_category">Невозможно загрузить список страниц по выбранной категории</string>
     <string name="error_fetch_stories_of_month">Невоможно загрузить истории месяца</string>
