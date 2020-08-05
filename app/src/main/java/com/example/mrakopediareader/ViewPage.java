@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.Volley;
@@ -52,6 +53,7 @@ public class ViewPage extends AppCompatActivity {
 
     private Menu menu;
     private WebView webView;
+    private SearchView searchView;
 
     private void handleLoadingState(boolean isLoading) {
         final ProgressBar progressBar = findViewById(R.id.pageLoadingProgressBar);
@@ -90,7 +92,21 @@ public class ViewPage extends AppCompatActivity {
         this.externalLinks = new ExternalLinks(getResources());
 
         this.favoritesStore = new FavoritesStore(getBaseContext());
-        webView = findViewById(R.id.web_view);
+        webView = findViewById(R.id.webView);
+        searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                webView.findNext(true);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                webView.findAllAsync(s);
+                return true;
+            }
+        });
 
         Optional.ofNullable(getSupportActionBar()).ifPresent(((actionBar) -> {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -151,6 +167,20 @@ public class ViewPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void toggleSearchBar() {
+        final MenuItem searchMenuItem = menu.findItem(R.id.search_in_page);
+        final boolean checked = searchMenuItem.isChecked();
+        if (checked) {
+            searchMenuItem.setChecked(false);
+            searchView.setQuery("", false);
+            searchView.setVisibility(View.GONE);
+        } else {
+            searchMenuItem.setChecked(true);
+            searchView.setVisibility(View.VISIBLE);
+            searchView.requestFocus();
+        }
+    }
+
     private void openMrakopedia() {
         this.mrakopediaUrlSub$ = api.getWebsiteUrlForPage(this.pageTitle)
             .subscribe(
@@ -198,6 +228,8 @@ public class ViewPage extends AppCompatActivity {
             case R.id.open_mrakopedia:
                 this.openMrakopedia();
                 return true;
+            case R.id.search_in_page:
+                this.toggleSearchBar();
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -26,6 +26,10 @@
         android:icon="@drawable/ic_menu_share"
         android:title="@string/ui_share" />
     <item
+        android:id="@+id/search_in_page"
+        android:checkable="true"
+        android:title="@string/ui_search_in_page" />
+    <item
         android:id="@+id/related"
         android:icon="@drawable/ic_related"
         android:title="@string/ui_related"
