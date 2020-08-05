@@ -4,14 +4,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 
-public class Contact {
+public class ExternalLinks {
     private final String issuesUrl;
 
     private final String telegramUrl;
 
     private final String mailUrl;
 
-    public Contact(Resources resources) {
+    public ExternalLinks(Resources resources) {
         issuesUrl = resources.getString(R.string.report_issue);
         telegramUrl = resources.getString(R.string.open_telegram);
         mailUrl = resources.getString(R.string.open_email);
@@ -27,5 +27,9 @@ public class Contact {
 
     public Intent openMailClient() {
         return new Intent(Intent.ACTION_VIEW, Uri.parse(mailUrl));
+    }
+
+    public Intent openWebsiteUrl(Uri uri) {
+        return new Intent(Intent.ACTION_VIEW, uri);
     }
 }

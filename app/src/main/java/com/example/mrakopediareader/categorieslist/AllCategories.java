@@ -1,6 +1,6 @@
 package com.example.mrakopediareader.categorieslist;
 
-import com.example.mrakopediareader.api.Category;
+import com.example.mrakopediareader.api.dto.Category;
 
 import java.util.ArrayList;
 

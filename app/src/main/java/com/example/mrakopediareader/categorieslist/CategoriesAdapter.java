@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mrakopediareader.R;
-import com.example.mrakopediareader.api.Category;
+import com.example.mrakopediareader.api.dto.Category;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;

@@ -27,7 +27,7 @@
             android:icon="@drawable/ic_calendar"
             android:title="@string/hotm" />
     </group>
-    <group android:id="@+id/contact">
+    <group android:id="@+id/externalLinks">
         <item
             android:id="@+id/nav_bug_or_enhancement"
             android:checkable="false"

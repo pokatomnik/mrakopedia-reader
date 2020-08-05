@@ -22,7 +22,7 @@ import com.example.mrakopediareader.LoadingState;
 import com.example.mrakopediareader.R;
 import com.example.mrakopediareader.ViewPage;
 import com.example.mrakopediareader.api.API;
-import com.example.mrakopediareader.api.Page;
+import com.example.mrakopediareader.api.dto.Page;
 
 import java.util.ArrayList;
 import java.util.Optional;

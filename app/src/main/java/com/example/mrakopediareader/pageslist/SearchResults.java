@@ -1,7 +1,7 @@
 package com.example.mrakopediareader.pageslist;
 
 import com.example.mrakopediareader.R;
-import com.example.mrakopediareader.api.Page;
+import com.example.mrakopediareader.api.dto.Page;
 import com.google.common.net.UrlEscapers;
 
 import java.util.ArrayList;

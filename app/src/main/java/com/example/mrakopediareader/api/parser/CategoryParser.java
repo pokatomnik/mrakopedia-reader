@@ -1,6 +1,6 @@
 package com.example.mrakopediareader.api.parser;
 
-import com.example.mrakopediareader.api.Category;
+import com.example.mrakopediareader.api.dto.Category;
 
 import org.json.JSONException;
 import org.json.JSONObject;

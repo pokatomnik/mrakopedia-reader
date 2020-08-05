@@ -21,7 +21,7 @@ import com.example.mrakopediareader.pageslist.FavoritesList;
 import com.example.mrakopediareader.pageslist.HOTMList;
 import com.example.mrakopediareader.pageslist.SearchResults;
 import com.example.mrakopediareader.api.API;
-import com.example.mrakopediareader.api.Page;
+import com.example.mrakopediareader.api.dto.Page;
 import com.example.mrakopediareader.categorieslist.AllCategories;
 import com.google.android.material.navigation.NavigationView;
 
@@ -47,7 +47,7 @@ public class GeneralActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Nullable
-    private Contact contact;
+    private ExternalLinks externalLinks;
 
     @Nullable
     private API api;
@@ -105,7 +105,7 @@ public class GeneralActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general);
 
-        contact = new Contact(getResources());
+        externalLinks = new ExternalLinks(getResources());
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -237,17 +237,17 @@ public class GeneralActivity extends AppCompatActivity
                 this.openHotmPages();
                 break;
             case R.id.nav_bug_or_enhancement:
-                Optional.ofNullable(this.contact)
-                        .ifPresent((contact) -> startActivity(contact.newIssue()));
+                Optional.ofNullable(this.externalLinks)
+                        .ifPresent((externalLinks) -> startActivity(externalLinks.newIssue()));
                 break;
             case R.id.nav_telegram:
-                Optional.ofNullable(this.contact)
-                        .ifPresent((contact) -> startActivity(contact.openTelegram()));
+                Optional.ofNullable(this.externalLinks)
+                        .ifPresent((externalLinks) -> startActivity(externalLinks.openTelegram()));
                 break;
             case R.id.nav_email:
                 Optional
-                        .ofNullable(this.contact)
-                        .ifPresent((contact) -> startActivity(contact.openMailClient()));
+                        .ofNullable(this.externalLinks)
+                        .ifPresent((externalLinks) -> startActivity(externalLinks.openMailClient()));
                 break;
             default:
                 break;

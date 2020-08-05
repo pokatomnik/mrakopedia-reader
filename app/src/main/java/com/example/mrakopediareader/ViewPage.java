@@ -17,6 +17,8 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.Volley;
+import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.categorieslist.CategoriesByPage;
 import com.example.mrakopediareader.pageslist.RelatedList;
 import com.example.mrakopediareader.linkshare.LinkShare;
@@ -28,6 +30,9 @@ public class ViewPage extends AppCompatActivity {
     private final LinkShare linkShare = new LinkShare();
     private final TextZoom textZoom = new TextZoom(100, 50, 200, 10);
 
+    private ExternalLinks externalLinks;
+    private API api;
+
     @Nullable
     private Disposable textZoomSub$;
 
@@ -36,6 +41,9 @@ public class ViewPage extends AppCompatActivity {
 
     @Nullable
     private Disposable linkShareSub$;
+
+    @Nullable
+    private Disposable mrakopediaUrlSub$;
 
     private FavoritesStore favoritesStore;
     private String pageUrl;
@@ -77,6 +85,10 @@ public class ViewPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_page);
+
+        this.api = new API(getResources(), Volley.newRequestQueue(getBaseContext()));
+        this.externalLinks = new ExternalLinks(getResources());
+
         this.favoritesStore = new FavoritesStore(getBaseContext());
         webView = findViewById(R.id.web_view);
 
@@ -139,6 +151,22 @@ public class ViewPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void openMrakopedia() {
+        this.mrakopediaUrlSub$ = api.getWebsiteUrlForPage(this.pageTitle)
+            .subscribe(
+                (result) -> {
+                    final Intent intent = externalLinks.openWebsiteUrl(result.getUri());
+                    startActivity(intent);
+                },
+                (err) -> {
+                    final String errorText = getResources()
+                            .getString(R.string.get_mrakopedia_website_url_error_message);
+                    final Toast toast = Toast
+                            .makeText(getBaseContext(), errorText, Toast.LENGTH_LONG);
+                    toast.show();
+                });
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -166,6 +194,9 @@ public class ViewPage extends AppCompatActivity {
                 return true;
             case R.id.categories:
                 this.openCategories();
+                return true;
+            case R.id.open_mrakopedia:
+                this.openMrakopedia();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -197,5 +228,6 @@ public class ViewPage extends AppCompatActivity {
         Optional.ofNullable(this.loadingSub$).ifPresent(Disposable::dispose);
         Optional.ofNullable(this.textZoomSub$).ifPresent(Disposable::dispose);
         Optional.ofNullable(this.linkShareSub$).ifPresent(Disposable::dispose);
+        Optional.ofNullable(this.mrakopediaUrlSub$).ifPresent(Disposable::dispose);
     }
 }
