@@ -78,7 +78,7 @@ abstract class CategoriesList extends AppCompatActivity {
             noItems.setVisibility(View.INVISIBLE);
 
             final Context context = getApplicationContext();
-            final String text = getResources().getString(R.string.failed_categories);
+            final String text = getResources().getString(R.string.notification_failed_categories);
             final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
             toast.show();
         } else if (loadingState == LoadingState.LOADING) {

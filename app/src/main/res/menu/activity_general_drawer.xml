@@ -10,39 +10,39 @@
             android:id="@+id/nav_random_page"
             android:checkable="false"
             android:icon="@drawable/ic_random_page"
-            android:title="@string/menu_random_page" />
+            android:title="@string/drawer_menu_random_page" />
         <item
             android:id="@+id/nav_categories"
             android:checkable="false"
             android:icon="@drawable/ic_category"
-            android:title="@string/manu_categories" />
+            android:title="@string/drawer_manu_categories" />
         <item
             android:id="@+id/nav_favorites"
             android:checkable="false"
             android:icon="@drawable/ic_favorite_black"
-            android:title="@string/favorites" />
+            android:title="@string/drawer_favorites" />
         <item
             android:id="@+id/nav_hotm"
             android:checkable="false"
             android:icon="@drawable/ic_calendar"
-            android:title="@string/hotm" />
+            android:title="@string/drawer_hotm" />
     </group>
     <group android:id="@+id/externalLinks">
         <item
             android:id="@+id/nav_bug_or_enhancement"
             android:checkable="false"
             android:icon="@drawable/ic_bug"
-            android:title="@string/bug_or_enhancement" />
+            android:title="@string/drawer_bug_or_enhancement" />
         <item
             android:id="@+id/nav_telegram"
             android:checkable="false"
             android:icon="@drawable/ic_telegram"
-            android:title="@string/contact_telegram" />
+            android:title="@string/drawer_contact_telegram" />
         <item
             android:id="@+id/nav_email"
             android:checkable="false"
             android:icon="@drawable/ic_email"
-            android:title="@string/contact_email" />
+            android:title="@string/drawer_contact_email" />
     </group>
 
 </menu>

@@ -36,33 +36,32 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/logo_content_description"
+            android:contentDescription="@string/ui_logo_content_description"
             app:srcCompat="@drawable/comfy" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/input_search_caption" />
+            android:text="@string/ui_input_search_caption" />
 
         <EditText
             android:id="@+id/searchText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="@string/default_search_input"
+            android:autofillHints="@string/ui_default_search_input"
             android:ems="10"
-            android:labelFor="@id/searchText"
-            android:text="@string/input_search"
             android:imeOptions="actionSearch"
-            android:maxLines="1"
-            android:inputType="text" />
+            android:inputType="text"
+            android:labelFor="@id/searchText"
+            android:maxLines="1" />
 
         <Button
             android:id="@+id/searchButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="handleClick"
-            android:text="@string/button_search" />
+            android:text="@string/ui_button_search" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

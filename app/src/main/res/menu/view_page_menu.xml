@@ -4,39 +4,39 @@
     <item
         android:id="@+id/favorites"
         android:icon="@drawable/ic_fav_selected"
-        android:title="@string/add_to_to_favorites"
+        android:title="@string/ui_add_to_to_favorites"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/zoom_in"
         android:icon="@drawable/ic_zoom_in"
-        android:title="@string/zoom_in"
+        android:title="@string/ui_zoom_in"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/zoom_out"
         android:icon="@drawable/ic_zoom_out"
-        android:title="@string/zoom_out"
+        android:title="@string/ui_zoom_out"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/reset_zoom"
         android:icon="@drawable/ic_zoom_reset"
-        android:title="@string/reset_zoom"
+        android:title="@string/ui_reset_zoom"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/share"
         android:icon="@drawable/ic_menu_share"
-        android:title="@string/share" />
+        android:title="@string/ui_share" />
     <item
         android:id="@+id/related"
         android:icon="@drawable/ic_related"
-        android:title="@string/related"
+        android:title="@string/ui_related"
         app:showAsAction="never" />
     <item
         android:id="@+id/categories"
         android:icon="@drawable/ic_category"
-        android:title="@string/categories_by_page"
+        android:title="@string/ui_categories_by_page"
         app:showAsAction="never" />
     <item
         android:id="@+id/open_mrakopedia"
-        android:title="@string/website_url"
+        android:title="@string/ui_website_url"
         app:showAsAction="never" />
 </menu>

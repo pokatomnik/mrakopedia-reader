@@ -6,25 +6,25 @@
 <resources>
     <string name="app_name">Mrakopedia Reader</string>
     <!-- Main activity UI resources -->
-    <string name="input_search_caption">Поиск статьи</string>
-    <string name="input_search"></string>
-    <string name="logo_content_description">Logo</string>
-    <string name="button_search">Искать</string>
-    <string name="default_search_input">Зеленая дверь</string>
-    <string name="default_category">Фантасмагория</string>
-    <string name="category_search_hint">Поиск категории</string>
-    <string name="add_to_to_favorites">Добавить в избранное</string>
-    <string name="remove_from_favorites">Удалить из избранного</string>
-    <string name="zoom_in">Увеличить</string>
-    <string name="zoom_out">Уменьшить</string>
-    <string name="reset_zoom">Сбросить масштаб</string>
-    <string name="share">Поделиться</string>
-    <string name="related">См. также</string>
-    <string name="categories_by_page">Категории</string>
-    <string name="website_url">Открыть на Мракопедии</string>
+    <string name="ui_input_search_caption">Поиск статьи</string>
+    <string name="ui_logo_content_description">Logo</string>
+    <string name="ui_button_search">Искать</string>
+    <string name="ui_default_search_input">Зеленая дверь</string>
+    <string name="ui_default_category">Фантасмагория</string>
+    <string name="ui_category_search_hint">Поиск категории</string>
+    <string name="ui_add_to_to_favorites">Добавить в избранное</string>
+    <string name="ui_remove_from_favorites">Удалить из избранного</string>
+    <string name="ui_zoom_in">Увеличить</string>
+    <string name="ui_zoom_out">Уменьшить</string>
+    <string name="ui_reset_zoom">Сбросить масштаб</string>
+    <string name="ui_share">Поделиться</string>
+    <string name="ui_related">См. также</string>
+    <string name="ui_categories_by_page">Категории</string>
+    <string name="ui_website_url">Открыть на Мракопедии</string>
+    <string name="ui_no_items">Поиск не дал результатов</string>
     <!-- API paths -->
     <string name="api_hostname">&hostname;</string>
-    <string name="legacy_api_hostname">&legacy_hostname;</string>
+    <string name="api_legacy_api_hostname">&legacy_hostname;</string>
     <string name="api_url">https://&hostname;</string>
     <string name="api_search_path">/api/search</string>
     <string name="api_page_path">/api/page</string>
@@ -39,31 +39,28 @@
     <string name="pass_page_title">pageTitle</string>
     <string name="pass_page_path">pagePath</string>
     <!--Notifications -->
-    <string name="failed_get_pages_message">Невозможно выполнить поиск, попробуйте позднее</string>
-    <string name="failed_get_random_page_message">Невозможно получить случайную страницу, попробуйте позднее</string>
-    <string name="failed_categories">Невозможно получить категории, попробуйте позднее</string>
-    <string name="noItems">Поиск не дал результатов</string>
-    <string name="share_error">Невозможно поделиться. Если эта ошибка будет повторяться, дайте мне знать</string>
-    <string name="get_mrakopedia_website_url_error_message">Невозможно получить ссылку на Мракопедию</string>
+    <string name="notification_failed_get_pages_message">Невозможно выполнить поиск, попробуйте позднее</string>
+    <string name="notification_failed_get_random_page_message">Невозможно получить случайную страницу, попробуйте позднее</string>
+    <string name="notification_failed_categories">Невозможно получить категории, попробуйте позднее</string>
+    <string name="notification_share_error">Невозможно поделиться. Если эта ошибка будет повторяться, дайте мне знать</string>
+    <string name="notification_get_mrakopedia_website_url_error_message">Невозможно получить ссылку на Мракопедию</string>
     <!-- Menu strings -->
-    <string name="title_activity_general">Mrakopedia Reader</string>
-    <string name="navigation_drawer_open">Открыть меню</string>
-    <string name="navigation_drawer_close">Закрыть меню</string>
-    <string name="nav_header_title">Mrakopedia Reader</string>
-    <string name="nav_header_subtitle">hugefast@gmail.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <!-- Menu entries -->
-    <string name="menu_random_page">Случайная страница</string>
-    <string name="manu_categories">Список категорий</string>
-    <string name="favorites">Избранное</string>
-    <string name="hotm">Истории месяца</string>
-    <string name="bug_or_enhancement">Я нашел ошибку</string>
-    <string name="contact_telegram">Telegram</string>
-    <string name="contact_email">Email</string>
-    <!-- Links -->
-    <string name="report_issue">https://github.com/pokatomnik/mrakopedia-reader/issues</string>
-    <string name="open_telegram">https://t.me/pokatomnik</string>
-    <string name="open_email">mailto:hugefast@gmail.com</string>
+    <string name="drawer_title_activity_general">Mrakopedia Reader</string>
+    <string name="drawer_navigation_drawer_open">Открыть меню</string>
+    <string name="drawer_navigation_drawer_close">Закрыть меню</string>
+    <string name="drawer_nav_header_title">Mrakopedia Reader</string>
+    <string name="drawer_nav_header_subtitle">hugefast@gmail.com</string>
+    <string name="drawer_nav_header_desc">Navigation header</string>
+    <string name="drawer_menu_random_page">Случайная страница</string>
+    <string name="drawer_manu_categories">Список категорий</string>
+    <string name="drawer_favorites">Избранное</string>
+    <string name="drawer_hotm">Истории месяца</string>
+    <string name="drawer_bug_or_enhancement">Я нашел ошибку</string>
+    <string name="drawer_contact_telegram">Telegram</string>
+    <string name="drawer_contact_email">Email</string>
+    <string name="drawer_report_issue">https://github.com/pokatomnik/mrakopedia-reader/issues</string>
+    <string name="drawer_open_telegram">https://t.me/pokatomnik</string>
+    <string name="drawer_open_email">mailto:hugefast@gmail.com</string>
     <!-- Fetch errors -->
     <string name="error_parse">Некорректный ответ от сервера</string>
     <string name="error_fetch_categories">Невозможно загрузить список категорий</string>
