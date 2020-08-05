@@ -1,9 +1,9 @@
-package com.example.mrakopediareader.api;
+package com.example.mrakopediareader.api.dto;
 
 public class Page {
-    private String title;
+    private final String title;
 
-    private String url;
+    private final String url;
 
     public Page(String title, String url) {
         this.title = title;

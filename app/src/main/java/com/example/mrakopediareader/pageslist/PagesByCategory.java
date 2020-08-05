@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 
 import com.example.mrakopediareader.R;
-import com.example.mrakopediareader.api.Page;
+import com.example.mrakopediareader.api.dto.Page;
 import com.google.common.net.UrlEscapers;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package com.example.mrakopediareader.pageslist;
 
 import com.example.mrakopediareader.api.API;
-import com.example.mrakopediareader.api.Page;
+import com.example.mrakopediareader.api.dto.Page;
 
 import java.util.ArrayList;
 import java.util.Optional;

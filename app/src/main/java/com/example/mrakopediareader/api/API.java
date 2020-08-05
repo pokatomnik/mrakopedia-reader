@@ -5,9 +5,13 @@ import android.content.res.Resources;
 import com.android.volley.RequestQueue;
 
 import com.example.mrakopediareader.R;
+import com.example.mrakopediareader.api.dto.Category;
+import com.example.mrakopediareader.api.dto.Page;
+import com.example.mrakopediareader.api.dto.WebsiteUrl;
 import com.example.mrakopediareader.api.parser.CategoryParser;
 import com.example.mrakopediareader.api.parser.PageParser;
 import com.example.mrakopediareader.api.parser.Parser;
+import com.example.mrakopediareader.api.parser.WebsiteURLParser;
 
 import org.json.JSONException;
 
@@ -18,6 +22,7 @@ import io.reactivex.rxjava3.core.Observable;
 public class API extends Queue {
     private final Parser<Page> pageParser = new PageParser();
     private final Parser<Category> categoryParser = new CategoryParser();
+    private final Parser<WebsiteUrl> websiteUrlParser = new WebsiteURLParser();
 
     private final Throwable parseError;
 
@@ -51,6 +56,27 @@ public class API extends Queue {
 
     public String getFullPagePath(String pagePath) {
         return apiURL + pagePath;
+    }
+
+    public Observable<WebsiteUrl> getWebsiteUrlForPage(String pageTitle) {
+        return Observable.create((resolver) -> {
+            jsonObjectRequest(
+                this.pageUrl + "/" + pageTitle + "/source",
+                (result) -> {
+                    try {
+                        resolver.onNext(websiteUrlParser.fromJsonObject(result));
+                        resolver.onComplete();
+                    } catch (JSONException e) {
+                        resolver.onError(parseError);
+                        resolver.onComplete();
+                    }
+                },
+                (error) -> {
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_website_url)));
+                    resolver.onComplete();
+                }
+            );
+        });
     }
 
     public Observable<ArrayList<Category>> getCategoryByPage(String pageTitle) {

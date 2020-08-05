@@ -35,4 +35,8 @@
         android:icon="@drawable/ic_category"
         android:title="@string/categories_by_page"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/open_mrakopedia"
+        android:title="@string/website_url"
+        app:showAsAction="never" />
 </menu>

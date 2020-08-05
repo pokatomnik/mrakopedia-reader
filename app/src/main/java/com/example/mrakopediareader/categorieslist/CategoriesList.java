@@ -24,7 +24,7 @@ import com.example.mrakopediareader.Filterable;
 import com.example.mrakopediareader.LoadingState;
 import com.example.mrakopediareader.R;
 import com.example.mrakopediareader.api.API;
-import com.example.mrakopediareader.api.Category;
+import com.example.mrakopediareader.api.dto.Category;
 import com.example.mrakopediareader.pageslist.PagesByCategory;
 import com.google.common.base.Strings;
 
