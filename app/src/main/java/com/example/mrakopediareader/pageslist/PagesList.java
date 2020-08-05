@@ -60,7 +60,7 @@ abstract class PagesList extends AppCompatActivity {
             noItems.setVisibility(View.INVISIBLE);
 
             final Context context = getApplicationContext();
-            final String text = getResources().getString(R.string.failed_get_pages_message);
+            final String text = getResources().getString(R.string.notification_failed_get_pages_message);
             final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
             toast.show();
         } else if (loadingState == LoadingState.LOADING) {

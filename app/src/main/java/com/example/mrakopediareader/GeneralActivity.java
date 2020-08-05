@@ -112,7 +112,7 @@ public class GeneralActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.drawer_navigation_drawer_open, R.string.drawer_navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
@@ -188,7 +188,7 @@ public class GeneralActivity extends AppCompatActivity
 
     private void handleGetRandomPageFailed(Throwable ignored) {
         final Context context = getApplicationContext();
-        final String text = getResources().getString(R.string.failed_get_random_page_message);
+        final String text = getResources().getString(R.string.notification_failed_get_random_page_message);
         final Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
         toast.show();
     }

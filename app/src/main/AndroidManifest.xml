@@ -49,7 +49,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
-                    android:host="@string/legacy_api_hostname"
+                    android:host="@string/api_legacy_api_hostname"
                     android:pathPrefix="/api/page" />
             </intent-filter>
             <intent-filter>
@@ -57,7 +57,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https"
-                    android:host="@string/legacy_api_hostname"
+                    android:host="@string/api_legacy_api_hostname"
                     android:pathPrefix="/api/page" />
             </intent-filter>
             <meta-data
@@ -106,7 +106,7 @@
         </activity>
         <activity
             android:name=".GeneralActivity"
-            android:label="@string/title_activity_general"
+            android:label="@string/drawer_title_activity_general"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -12,9 +12,9 @@ public class ExternalLinks {
     private final String mailUrl;
 
     public ExternalLinks(Resources resources) {
-        issuesUrl = resources.getString(R.string.report_issue);
-        telegramUrl = resources.getString(R.string.open_telegram);
-        mailUrl = resources.getString(R.string.open_email);
+        issuesUrl = resources.getString(R.string.drawer_report_issue);
+        telegramUrl = resources.getString(R.string.drawer_open_telegram);
+        mailUrl = resources.getString(R.string.drawer_open_email);
     }
 
     public Intent newIssue() {
