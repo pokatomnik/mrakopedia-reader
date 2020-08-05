@@ -53,6 +53,27 @@ public class API extends Queue {
         return apiURL + pagePath;
     }
 
+    public Observable<ArrayList<Category>> getCategoryByPage(String pageTitle) {
+        return Observable.create((resolver) -> {
+            jsonArrayRequest(
+            this.pageUrl + "/" + pageTitle + "/categories",
+                (result) -> {
+                    try {
+                        resolver.onNext(categoryParser.fromJsonArray(result));
+                        resolver.onComplete();
+                    } catch (JSONException e) {
+                        resolver.onError(parseError);
+                        resolver.onComplete();
+                    }
+                },
+                (error) -> {
+                    resolver.onError(new Throwable(resources.getString(R.string.error_fetch_categories_by_page)));
+                    resolver.onComplete();
+                }
+            );
+        });
+    }
+
     public Observable<ArrayList<Category>> getCategories() {
         return Observable.create((resolver) -> {
             jsonArrayRequest(
@@ -66,10 +87,10 @@ public class API extends Queue {
                         resolver.onComplete();
                     }
                 },
-                ((error) -> {
+                (error) -> {
                     resolver.onError(new Throwable(resources.getString(R.string.error_fetch_categories)));
                     resolver.onComplete();
-                })
+                }
             );
         });
     }

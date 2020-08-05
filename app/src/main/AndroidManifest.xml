@@ -9,9 +9,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Categories"
+            android:name=".categorieslist.AllCategories"
             android:parentActivityName=".GeneralActivity"
             android:label="Список категорий">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".GeneralActivity" />
+        </activity>
+        <activity
+            android:name=".categorieslist.CategoriesByPage"
+            android:parentActivityName=".GeneralActivity"
+            android:label="Категории истории">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
@@ -57,7 +65,7 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
-            android:name=".PagesList.SearchResults"
+            android:name=".pageslist.SearchResults"
             android:parentActivityName=".GeneralActivity"
             android:label="Результаты поиска">
             <meta-data
@@ -65,7 +73,7 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
-            android:name=".PagesList.PagesByCategory"
+            android:name=".pageslist.PagesByCategory"
             android:parentActivityName=".GeneralActivity"
             android:label="Истории по категории">
             <meta-data
@@ -73,7 +81,7 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
-            android:name=".PagesList.FavoritesList"
+            android:name=".pageslist.FavoritesList"
             android:parentActivityName=".GeneralActivity"
             android:label="Избранное">
             <meta-data
@@ -81,7 +89,7 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
-            android:name=".PagesList.HOTMList"
+            android:name=".pageslist.HOTMList"
             android:parentActivityName=".GeneralActivity"
             android:label="Истории месяца">
             <meta-data
@@ -89,7 +97,7 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
-            android:name=".PagesList.RelatedList"
+            android:name=".pageslist.RelatedList"
             android:parentActivityName=".GeneralActivity"
             android:label="Похожие страницы">
             <meta-data

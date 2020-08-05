@@ -1,4 +1,4 @@
-package com.example.mrakopediareader.PagesList;
+package com.example.mrakopediareader.pageslist;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

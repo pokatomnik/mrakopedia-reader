@@ -1,11 +1,4 @@
-package com.example.mrakopediareader;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.example.mrakopediareader.categorieslist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,25 +12,36 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.toolbox.Volley;
-import com.example.mrakopediareader.PagesList.PagesByCategory;
+import com.example.mrakopediareader.Filterable;
+import com.example.mrakopediareader.LoadingState;
+import com.example.mrakopediareader.R;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.Category;
+import com.example.mrakopediareader.pageslist.PagesByCategory;
 import com.google.common.base.Strings;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 
-public class Categories extends AppCompatActivity {
+abstract class CategoriesList extends AppCompatActivity {
     private RecyclerView.Adapter<CategoriesAdapter.ViewHolder> mAdapter;
 
     @Nullable
-    private API api;
+    protected API api;
 
     private Filterable<String, Category> categoryFilter =
             new Filterable<>("", (search, category) -> {
@@ -59,6 +63,8 @@ public class Categories extends AppCompatActivity {
 
     @Nullable
     private Disposable categoryFilterSub$;
+
+    protected abstract Observable<ArrayList<Category>> getCategories();
 
     private void manageVisibility(LoadingState loadingState) {
         final RecyclerView recyclerView = findViewById(R.id.categoriesView);
@@ -149,7 +155,7 @@ public class Categories extends AppCompatActivity {
                 .getSearchResultSubj$()
                 .subscribe(this::updateFilteredResults);
         this.loadingSubj$.onNext(LoadingState.LOADING);
-        this.resultsSub$ = this.api.getCategories()
+        this.resultsSub$ = this.getCategories()
                 .doOnNext((results) -> {
                     if (results.size() == 0) {
                         loadingSubj$.onNext(LoadingState.EMPTY);

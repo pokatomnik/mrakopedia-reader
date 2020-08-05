@@ -17,7 +17,8 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.mrakopediareader.PagesList.RelatedList;
+import com.example.mrakopediareader.categorieslist.CategoriesByPage;
+import com.example.mrakopediareader.pageslist.RelatedList;
 import com.example.mrakopediareader.linkshare.LinkShare;
 import java.util.Optional;
 
@@ -132,6 +133,12 @@ public class ViewPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void openCategories() {
+        final Intent intent = new Intent(getBaseContext(), CategoriesByPage.class);
+        intent.putExtra(getResources().getString(R.string.pass_page_title), this.pageTitle);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -156,6 +163,9 @@ public class ViewPage extends AppCompatActivity {
                 return true;
             case R.id.related:
                 this.openRelated();
+                return true;
+            case R.id.categories:
+                this.openCategories();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
