@@ -60,7 +60,7 @@
     <string name="drawer_contact_telegram">Telegram</string>
     <string name="drawer_contact_email">Email</string>
     <string name="drawer_report_issue">https://github.com/pokatomnik/mrakopedia-reader/issues</string>
-    <string name="drawer_open_telegram">https://t.me/pokatomnik</string>
+    <string name="drawer_open_telegram">https://t.me/johndoefoobar</string>
     <string name="drawer_open_email">mailto:hugefast@gmail.com</string>
     <!-- Fetch errors -->
     <string name="error_parse">Некорректный ответ от сервера</string>
