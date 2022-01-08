@@ -1,5 +1,6 @@
 package com.example.mrakopediareader.api;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
@@ -50,7 +51,7 @@ class Queue {
         Response.Listener<JSONObject> listener,
         Response.ErrorListener errorListener
     ) {
-        queueRequest(new JsonObjectRequest(url, null, listener, errorListener));
+        queueRequest(new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener));
     }
 
     public void jsonArrayRequest(
