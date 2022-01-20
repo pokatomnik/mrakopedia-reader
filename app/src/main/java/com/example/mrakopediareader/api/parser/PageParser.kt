@@ -6,7 +6,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 internal class PageParser : ParserImpl<Page>() {
-    @Throws(JSONException::class)
     override fun fromJsonObject(jsonObject: JSONObject): Page {
         val title = jsonObject.getString(KEY_TITLE)
         val url = jsonObject.getString(KEY_URL)

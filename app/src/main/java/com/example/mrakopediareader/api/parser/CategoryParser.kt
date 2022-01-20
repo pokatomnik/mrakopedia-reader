@@ -6,7 +6,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 internal class CategoryParser : ParserImpl<Category>() {
-    @Throws(JSONException::class)
     override fun fromJsonObject(jsonObject: JSONObject): Category {
         val title = jsonObject.getString(KEY_TITLE)
         val url = jsonObject.getString(KEY_URL)

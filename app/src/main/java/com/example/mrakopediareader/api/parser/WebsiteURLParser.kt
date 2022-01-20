@@ -7,7 +7,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 internal class WebsiteURLParser : ParserImpl<WebsiteUrl>() {
-    @Throws(JSONException::class)
     override fun fromJsonObject(jsonObject: JSONObject): WebsiteUrl {
         val title = jsonObject.getString(KEY_TITLE)
         val uri = Uri.parse(jsonObject.getString(KEY_URL))

@@ -16,13 +16,13 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
-import com.android.volley.toolbox.Volley;
 import com.example.mrakopediareader.pageslist.FavoritesList;
 import com.example.mrakopediareader.pageslist.HOTMList;
 import com.example.mrakopediareader.pageslist.SearchResults;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.dto.Page;
 import com.example.mrakopediareader.categorieslist.AllCategories;
+import com.example.mrakopediareader.viewpage.ViewPage;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -54,7 +54,7 @@ public class GeneralActivity extends AppCompatActivity
 
     private BehaviorSubject<String> inputSub$;
 
-    private BehaviorSubject<Boolean> busynessSubj$ = BehaviorSubject.createDefault(false);
+    private final BehaviorSubject<Boolean> busynessSubj$ = BehaviorSubject.createDefault(false);
 
     private Button searchButton;
 
@@ -64,16 +64,9 @@ public class GeneralActivity extends AppCompatActivity
     @Nullable
     private Disposable businessSub$;
 
-    private TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-        @Override
-        public void afterTextChanged(Editable editable) {
-            GeneralActivity.this.inputSub$.onNext(editable.toString());
-        }
-    };
+    private final TextWatcher textWatcher = new SearchTextWatcher((text) -> {
+        inputSub$.onNext(text); return null;
+    });
 
     @Nullable
     private Disposable searchStringChangeSub$;
@@ -117,7 +110,8 @@ public class GeneralActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        this.api = new API(getResources(), Volley.newRequestQueue(this));
+        MRReaderApplication application = (MRReaderApplication) getApplication();
+        this.api = application.getApi();
 
         this.searchButton = findViewById(R.id.searchButton);
         final EditText editText = findViewById(R.id.searchText);

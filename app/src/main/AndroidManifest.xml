@@ -5,6 +5,7 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name="com.example.mrakopediareader.MRReaderApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -27,7 +28,7 @@
                 android:value=".GeneralActivity" />
         </activity>
         <activity
-            android:name=".ViewPage"
+            android:name=".viewpage.ViewPage"
             android:parentActivityName=".GeneralActivity"
             android:label="История"
             android:exported="true">

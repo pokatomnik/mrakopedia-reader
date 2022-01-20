@@ -17,10 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.Volley;
 import com.example.mrakopediareader.LoadingState;
+import com.example.mrakopediareader.MRReaderApplication;
 import com.example.mrakopediareader.R;
-import com.example.mrakopediareader.ViewPage;
+import com.example.mrakopediareader.viewpage.ViewPage;
 import com.example.mrakopediareader.api.API;
 import com.example.mrakopediareader.api.dto.Page;
 
@@ -127,7 +127,8 @@ abstract class PagesList extends AppCompatActivity {
         mAdapter = new PageResultsAdapter(this.pagesList, this::handleClick);
         recyclerView.setAdapter(mAdapter);
 
-        this.api = new API(getResources(), Volley.newRequestQueue(this));
+        final MRReaderApplication application = (MRReaderApplication) getApplication();
+        this.api = application.getApi();
 
         loadingSubj$.onNext(LoadingState.LOADING);
         this.resultsSub$ = this.getPages()
