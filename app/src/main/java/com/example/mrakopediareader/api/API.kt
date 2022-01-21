@@ -25,11 +25,11 @@ class API(context: Context) {
         queue.jsonObjectRequestGET(apiURLs.pageSource(pageTitle))
             .map(websiteUrlParser::fromJsonObject)
 
-    fun getCategoryByPage(pageTitle: String): Observable<ArrayList<Category>> =
+    fun getCategoryByPage(pageTitle: String): Observable<List<Category>> =
         queue.jsonArrayRequestGET(apiURLs.pageCategories(pageTitle))
             .map(categoryParser::fromJsonArray)
 
-    fun getCategories(): Observable<ArrayList<Category>> =
+    fun getCategories(): Observable<List<Category>> =
         queue.jsonArrayRequestGET(apiURLs.categoriesUrl())
             .map(categoryParser::fromJsonArray)
 
@@ -37,19 +37,19 @@ class API(context: Context) {
         queue.jsonObjectRequestGET(apiURLs.randomURL())
             .map(pageParser::fromJsonObject)
 
-    fun getPagesByCategory(categoryName: String): Observable<ArrayList<Page>> =
+    fun getPagesByCategory(categoryName: String): Observable<List<Page>> =
         queue.jsonArrayRequestGET(apiURLs.pagesOfCategory(categoryName))
             .map(pageParser::fromJsonArray)
 
-    fun getHOTM(): Observable<ArrayList<Page>> =
+    fun getHOTM(): Observable<List<Page>> =
         queue.jsonArrayRequestGET(apiURLs.hotmUrl())
             .map(pageParser::fromJsonArray)
 
-    fun searchByText(search: String): Observable<ArrayList<Page>> =
+    fun searchByText(search: String): Observable<List<Page>> =
         queue.jsonArrayRequestGET(apiURLs.searchURL(search))
             .map(pageParser::fromJsonArray)
 
-    fun getRelatedPages(pageTitle: String): Observable<ArrayList<Page>> =
+    fun getRelatedPages(pageTitle: String): Observable<List<Page>> =
         queue.jsonArrayRequestGET(apiURLs.pageRelated(pageTitle))
             .map(pageParser::fromJsonArray)
 

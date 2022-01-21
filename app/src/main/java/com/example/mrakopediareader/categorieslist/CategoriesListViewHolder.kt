@@ -12,7 +12,7 @@ class CategoriesListViewHolder(
 ) : RecyclerView.ViewHolder(layout) {
     private val textView: TextView by lazy { layout.findViewById(R.id.categoryTitle) }
 
-    private lateinit var category: Category
+    private var category: Category? = null
 
     fun setCategory(category: Category) {
         this.category = category
@@ -20,6 +20,6 @@ class CategoriesListViewHolder(
     }
 
     init {
-        layout.setOnClickListener { onClick(category) }
+        layout.setOnClickListener { category?.apply(onClick) }
     }
 }

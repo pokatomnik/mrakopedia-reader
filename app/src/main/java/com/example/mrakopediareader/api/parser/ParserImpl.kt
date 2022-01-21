@@ -7,11 +7,11 @@ import java.util.ArrayList
 
 internal abstract class ParserImpl<T> : Parser<T> {
     @Throws(JSONException::class)
-    override fun fromJsonArray(array: JSONArray): ArrayList<T> {
-        val length = array.length()
+    override fun fromJsonArray(jsonArray: JSONArray): ArrayList<T> {
+        val length = jsonArray.length()
         val results = ArrayList<T>(length)
         for (i in 0 until length) {
-            results.add(fromJsonObject(array.getJSONObject(i)))
+            results.add(fromJsonObject(jsonArray.getJSONObject(i)))
         }
         return results
     }

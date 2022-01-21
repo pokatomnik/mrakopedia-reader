@@ -11,5 +11,5 @@ interface Parser<T> {
     fun fromJsonObject(jsonObject: JSONObject): T
 
     @Throws(JSONException::class)
-    fun fromJsonArray(jsonArray: JSONArray): ArrayList<T>
+    fun fromJsonArray(jsonArray: JSONArray): List<T>
 }
