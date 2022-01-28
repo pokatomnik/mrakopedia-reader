@@ -27,7 +27,8 @@
         <activity
             android:name=".ViewPage"
             android:parentActivityName=".GeneralActivity"
-            android:label="История">
+            android:label="История"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -107,7 +108,8 @@
         <activity
             android:name=".GeneralActivity"
             android:label="@string/drawer_title_activity_general"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
