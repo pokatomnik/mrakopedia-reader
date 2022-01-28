@@ -9,8 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:allowBackup="true"
-        android:fullBackupContent="true">
+        android:allowBackup="true">
         <activity
             android:name=".categorieslist.AllCategories"
             android:parentActivityName=".GeneralActivity"
@@ -31,7 +30,8 @@
             android:name=".viewpage.ViewPage"
             android:parentActivityName=".GeneralActivity"
             android:label="История"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
