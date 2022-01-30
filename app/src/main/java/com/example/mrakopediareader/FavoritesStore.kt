@@ -1,35 +1,29 @@
 package com.example.mrakopediareader
 
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import com.example.mrakopediareader.api.dto.Page
+import com.example.mrakopediareader.db.dao.Database
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 
-class FavoritesStore(context: Context) {
-    private val sharedPreferences: SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context)
-
-    operator fun get(name: String): String? {
-        return sharedPreferences.getString(name, null)
+class FavoritesStore(private val database: Database) {
+    fun get(title: String): Single<String> {
+        return database.favoritesDao().getByTitle(title).map { it.url }
     }
 
-    fun remove(name: String?) {
-        sharedPreferences.edit().remove(name).apply()
+    fun remove(title: String): Completable{
+        return database.favoritesDao().delete(title)
     }
 
-    operator fun set(name: String, value: String?) {
-        sharedPreferences.edit().putString(name, value).apply()
+    fun set(page: Page): Completable {
+        return database.favoritesDao().insert(page)
     }
 
-    val pages: Collection<Page>
-        get() = sharedPreferences.all
-            .keys
-            .fold(arrayListOf()) {
-                list, title -> this[title]?.let { list.add(Page(title, it)); list } ?: list
-            }
+    fun getAll(): Single<List<Page>> {
+        return database.favoritesDao().getAll()
+    }
 
-    fun has(name: String): Boolean {
-        return sharedPreferences.getString(name, null) != null
+    fun has(title: String): Single<Boolean> {
+        return database.favoritesDao().exists(title)
     }
 
 }

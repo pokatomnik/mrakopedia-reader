@@ -1,3 +1,10 @@
 package com.example.mrakopediareader.api.dto
 
-data class Page(val title: String, val url: String)
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+
+@Entity(tableName = "favorites")
+data class Page(
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "url") val url: String
+)
