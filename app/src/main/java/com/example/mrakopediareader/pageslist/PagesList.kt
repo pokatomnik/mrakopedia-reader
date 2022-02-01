@@ -19,9 +19,9 @@ import com.example.mrakopediareader.api.dto.Page
 import com.example.mrakopediareader.viewpage.ViewPage
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
-import java.util.*
 
 abstract class PagesList : AppCompatActivity() {
     private val pagesList = mutableListOf<Page>()
@@ -82,9 +82,11 @@ abstract class PagesList : AppCompatActivity() {
     }
 
     private fun handleResults(newResults: List<Page>) {
-        pagesList.clear()
-        pagesList.addAll(newResults)
-        mAdapter.notifyDataSetChanged()
+        runOnUiThread {
+            pagesList.clear()
+            pagesList.addAll(newResults)
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun handleError(ignored: Throwable) {
@@ -113,6 +115,7 @@ abstract class PagesList : AppCompatActivity() {
                     else -> loadingSubject.onNext(LoadingState.HAS_RESULTS)
                 }
             }
+            .subscribeOn(Schedulers.single())
             .subscribe(::handleResults, ::handleError)
     }
 
