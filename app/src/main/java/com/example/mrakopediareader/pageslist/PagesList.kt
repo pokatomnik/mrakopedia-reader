@@ -2,6 +2,7 @@ package com.example.mrakopediareader.pageslist
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
@@ -110,9 +111,12 @@ abstract class PagesList : AppCompatActivity() {
         loadingSubject.onNext(LoadingState.LOADING)
         resultsSubscription = getPages()
             .doOnNext {
-                when (it.size) {
-                    0 -> loadingSubject.onNext(LoadingState.EMPTY)
-                    else -> loadingSubject.onNext(LoadingState.HAS_RESULTS)
+                Log.d("PAGES","In doOnNext")
+                runOnUiThread {
+                    when (it.size) {
+                        0 -> loadingSubject.onNext(LoadingState.EMPTY)
+                        else -> loadingSubject.onNext(LoadingState.HAS_RESULTS)
+                    }
                 }
             }
             .subscribeOn(Schedulers.single())
