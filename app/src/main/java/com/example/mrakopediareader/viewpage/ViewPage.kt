@@ -15,13 +15,20 @@ import com.example.mrakopediareader.MRReaderApplication
 import com.example.mrakopediareader.R
 import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.categorieslist.CategoriesByPage
+import com.example.mrakopediareader.db.dao.favorites.Favorite
 import com.example.mrakopediareader.linkshare.shareLink
 import com.example.mrakopediareader.pageslist.RelatedList
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class ViewPage : AppCompatActivity() {
-    private val api: API by lazy { (application as MRReaderApplication).api}
+    private val api: API by lazy { (application as MRReaderApplication).api }
 
-    private val mFavoritesStore: FavoritesStore by lazy { FavoritesStore(baseContext) }
+    private val mFavoritesStore: FavoritesStore by lazy {
+        val application = application as MRReaderApplication
+        FavoritesStore(application.database)
+    }
 
     private val mViewPagePrefs: ViewPagePrefs? by lazy {
         resolveIntent(resources, intent)
@@ -72,14 +79,22 @@ class ViewPage : AppCompatActivity() {
     private fun toggleFavorite() {
         mViewPagePrefs?.let {
             val menuItem = mMenu.findItem(R.id.favorites)
-            if (mFavoritesStore.has(it.pageTitle)) {
-                mFavoritesStore.remove(it.pageTitle)
-                menuItem.setTitle(R.string.ui_add_to_to_favorites)
-                menuItem.setIcon(R.drawable.ic_fav_unselected)
-            } else {
-                mFavoritesStore[it.pageTitle] = it.pagePath
-                menuItem.setTitle(R.string.ui_remove_from_favorites)
-                menuItem.setIcon(R.drawable.ic_fav_selected)
+            GlobalScope.launch {
+                val exists = mFavoritesStore.has(it.pageTitle)
+                if (exists) {
+                    mFavoritesStore.remove(it.pageTitle)
+                } else {
+                    mFavoritesStore.set(Favorite(title = it.pageTitle, url = it.pagePath))
+                }
+                runOnUiThread {
+                    if (exists) {
+                        menuItem.setTitle(R.string.ui_add_to_to_favorites)
+                        menuItem.setIcon(R.drawable.ic_fav_unselected)
+                    } else {
+                        menuItem.setTitle(R.string.ui_remove_from_favorites)
+                        menuItem.setIcon(R.drawable.ic_fav_selected)
+                    }
+                }
             }
         }
     }
@@ -177,12 +192,17 @@ class ViewPage : AppCompatActivity() {
         val menuItem = menu.findItem(R.id.favorites)
 
         mViewPagePrefs?.let {
-            if (mFavoritesStore.has(it.pageTitle)) {
-                menuItem.setTitle(R.string.ui_remove_from_favorites)
-                menuItem.setIcon(R.drawable.ic_fav_selected)
-            } else {
-                menuItem.setTitle(R.string.ui_add_to_to_favorites)
-                menuItem.setIcon(R.drawable.ic_fav_unselected)
+            GlobalScope.launch {
+                val exists = mFavoritesStore.has(it.pageTitle)
+                runOnUiThread {
+                    if (exists) {
+                        menuItem.setTitle(R.string.ui_remove_from_favorites)
+                        menuItem.setIcon(R.drawable.ic_fav_selected)
+                    } else {
+                        menuItem.setTitle(R.string.ui_add_to_to_favorites)
+                        menuItem.setIcon(R.drawable.ic_fav_unselected)
+                    }
+                }
             }
         }
 

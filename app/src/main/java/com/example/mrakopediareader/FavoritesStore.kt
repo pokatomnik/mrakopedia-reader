@@ -1,35 +1,23 @@
 package com.example.mrakopediareader
 
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
-import com.example.mrakopediareader.api.dto.Page
+import com.example.mrakopediareader.db.dao.Database
+import com.example.mrakopediareader.db.dao.favorites.Favorite
 
-class FavoritesStore(context: Context) {
-    private val sharedPreferences: SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context)
-
-    operator fun get(name: String): String? {
-        return sharedPreferences.getString(name, null)
+class FavoritesStore(private val database: Database) {
+    fun remove(title: String) {
+        return database.favoritesDao().delete(title)
     }
 
-    fun remove(name: String?) {
-        sharedPreferences.edit().remove(name).apply()
+    fun set(favorite: Favorite) {
+        database.favoritesDao().insert(favorite)
     }
 
-    operator fun set(name: String, value: String?) {
-        sharedPreferences.edit().putString(name, value).apply()
+    fun getAll(): List<Favorite> {
+        return database.favoritesDao().getAll()
     }
 
-    val pages: Collection<Page>
-        get() = sharedPreferences.all
-            .keys
-            .fold(arrayListOf()) {
-                list, title -> this[title]?.let { list.add(Page(title, it)); list } ?: list
-            }
-
-    fun has(name: String): Boolean {
-        return sharedPreferences.getString(name, null) != null
+    fun has(title: String): Boolean {
+        return database.favoritesDao().exists(title)
     }
 
 }
