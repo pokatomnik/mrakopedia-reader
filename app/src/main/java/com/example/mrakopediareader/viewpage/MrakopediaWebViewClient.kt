@@ -4,15 +4,19 @@ import android.graphics.Bitmap
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-internal class MrakopediaWebViewClient(private val handleLoading: (isLoading: Boolean) -> Unit) :
+internal class MrakopediaWebViewClient(
+    private val scrollPublisher: BehaviorSubject<Int>,
+    private val handleLoading: (isLoading: Boolean) -> Unit
+) :
     WebViewClient() {
 
     private val textZoom = TextZoom(100, 50, 200, 10) {
         mWebView?.settings?.textZoom = it
     }
 
-    private var mWebView: WebView? = null
+    private var mWebView: MRWebView? = null
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
@@ -24,14 +28,19 @@ internal class MrakopediaWebViewClient(private val handleLoading: (isLoading: Bo
         handleLoading(false)
     }
 
-    fun attach(webView: WebView): MrakopediaWebViewClient {
+    fun attach(webView: MRWebView): MrakopediaWebViewClient {
         if (mWebView != null) {
             throw Error("Already attached")
         }
 
         mWebView = webView
 
+        webView.scrollY = scrollPublisher.value ?: 0
+        webView.setOnScrollChangeListener { _, _, _, _, _ ->
+            scrollPublisher.onNext(webView.scrollY * 100 / webView.maxScrollY)
+        }
         webView.webViewClient = this
+        webView.verticalScrollbarPosition
         webView.settings.javaScriptEnabled = false
         webView.settings.javaScriptCanOpenWindowsAutomatically = false
         webView.settings.setSupportMultipleWindows(false)
