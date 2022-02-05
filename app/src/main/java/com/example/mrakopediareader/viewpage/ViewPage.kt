@@ -18,11 +18,29 @@ import com.example.mrakopediareader.categorieslist.CategoriesByPage
 import com.example.mrakopediareader.db.dao.favorites.Favorite
 import com.example.mrakopediareader.linkshare.shareLink
 import com.example.mrakopediareader.pageslist.RelatedList
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 class ViewPage : AppCompatActivity() {
+    private val defaultActionbarTitle by lazy {
+        supportActionBar?.title
+    }
+
+    private val scrollYSubject = BehaviorSubject.createDefault(0)
+
+    private val scrollSubscription = scrollYSubject
+        .debounce(200, TimeUnit.MILLISECONDS)
+        .subscribe {
+            runOnUiThread {
+                supportActionBar?.apply {
+                    title = "$defaultActionbarTitle ${it}%"
+                }
+            }
+        }
+
     private val api: API by lazy { (application as MRReaderApplication).api }
 
     private val mFavoritesStore: FavoritesStore by lazy {
@@ -35,7 +53,7 @@ class ViewPage : AppCompatActivity() {
     }
 
     private val webViewClient: MrakopediaWebViewClient by lazy {
-        MrakopediaWebViewClient {
+        MrakopediaWebViewClient(scrollYSubject) {
             val progressBar = findViewById<ProgressBar>(R.id.pageLoadingProgressBar)
             if (it) {
                 webViewClient.hide()
@@ -207,5 +225,10 @@ class ViewPage : AppCompatActivity() {
         }
 
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scrollSubscription.dispose()
     }
 }
