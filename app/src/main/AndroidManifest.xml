@@ -1,122 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mrakopediareader">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".MRReaderApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name="com.example.mrakopediareader.MRReaderApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:allowBackup="true">
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".FavoritesExportActivity"
+            android:exported="false"
+            android:label="@string/title_activity_favorites_export"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".categorieslist.AllCategories"
-            android:parentActivityName=".GeneralActivity"
-            android:label="Список категорий">
+            android:label="Список категорий"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".categorieslist.CategoriesByPage"
-            android:parentActivityName=".GeneralActivity"
-            android:label="Категории истории">
+            android:label="Категории истории"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".viewpage.ViewPage"
-            android:parentActivityName=".GeneralActivity"
-            android:label="История"
+            android:configChanges="orientation|screenSize"
             android:exported="true"
-            android:configChanges="orientation|screenSize">
+            android:label="История"
+            android:parentActivityName=".GeneralActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
+
+                <data
                     android:host="@string/api_hostname"
-                    android:pathPrefix="/api/page" />
+                    android:pathPrefix="/api/page"
+                    android:scheme="http" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
+
+                <data
                     android:host="@string/api_hostname"
-                    android:pathPrefix="/api/page" />
+                    android:pathPrefix="/api/page"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
+
+                <data
                     android:host="@string/api_legacy_api_hostname"
-                    android:pathPrefix="/api/page" />
+                    android:pathPrefix="/api/page"
+                    android:scheme="http" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
+
+                <data
                     android:host="@string/api_legacy_api_hostname"
-                    android:pathPrefix="/api/page" />
+                    android:pathPrefix="/api/page"
+                    android:scheme="https" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".pageslist.SearchResults"
-            android:parentActivityName=".GeneralActivity"
-            android:label="Результаты поиска">
+            android:label="Результаты поиска"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".pageslist.PagesByCategory"
-            android:parentActivityName=".GeneralActivity"
-            android:label="Истории по категории">
+            android:label="Истории по категории"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".pageslist.FavoritesList"
-            android:parentActivityName=".GeneralActivity"
-            android:label="Избранное">
+            android:label="Избранное"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".pageslist.HOTMList"
-            android:parentActivityName=".GeneralActivity"
-            android:label="Истории месяца">
+            android:label="Истории месяца"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".pageslist.RelatedList"
-            android:parentActivityName=".GeneralActivity"
-            android:label="Похожие страницы">
+            android:label="Похожие страницы"
+            android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GeneralActivity" />
         </activity>
         <activity
             android:name=".GeneralActivity"
+            android:exported="true"
             android:label="@string/drawer_title_activity_general"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="true">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

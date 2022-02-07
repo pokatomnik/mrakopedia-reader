@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [
-    <!ENTITY hostname "mrakopedia.tk">
-    <!ENTITY legacy_hostname "doc-pad-api.vercel.app">
-]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY hostname "mrakopedia.tk"><!ENTITY legacy_hostname "doc-pad-api.vercel.app">]>
 <resources>
     <string name="app_name">Mrakopedia Reader</string>
     <!-- Main activity UI resources -->
@@ -72,4 +68,5 @@
     <string name="error_fetch_search_results">Невозможно получить результаты поиска</string>
     <string name="error_fetch_related_pages">Невозможно загрузить похожие страницы</string>
     <string name="error_fetch_website_url">Невозможно получить ссылку на Мракопедию</string>
+    <string name="title_activity_favorites_export">FavoritesExportActivity</string>
 </resources>

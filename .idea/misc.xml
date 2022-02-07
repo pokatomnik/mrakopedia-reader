@@ -7,6 +7,9 @@
         <entry key="..\:/Users/Danilian/projects/mrakopedia-reader/app/src/main/res/layout/activity_view_page.xml" value="0.13095238095238096" />
         <entry key="..\:/Users/Danilian/projects/mrakopedia-reader/app/src/main/res/layout/content_general.xml" value="0.20260416666666667" />
         <entry key="app/src/main/res/layout/activity_view_page.xml" value="0.14447463768115942" />
+        <entry key="app/src/main/res/layout/app_bar_general.xml" value="0.265625" />
+        <entry key="app/src/main/res/layout/nav_header_general.xml" value="0.265625" />
+        <entry key="app/src/main/res/menu/activity_general_drawer.xml" value="0.265625" />
       </map>
     </option>
   </component>
