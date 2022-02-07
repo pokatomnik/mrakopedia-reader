@@ -9,7 +9,8 @@ import com.example.mrakopediareader.api.dto.Page
 
 internal class PageResultsAdapter(
     private val pages: List<Page>,
-    private val onClick: (page: Page) -> Unit
+    private val onClick: (page: Page) -> Unit,
+    private val getReadingTime: (title: String) -> String,
 ) : RecyclerView.Adapter<PagesListViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -17,7 +18,7 @@ internal class PageResultsAdapter(
     ): PagesListViewHolder {
         val layout: LinearLayout? = LayoutInflater.from(parent.context)
             .inflate(R.layout.search_result_view, parent, false) as? LinearLayout
-        return layout?.let { PagesListViewHolder(it, onClick) } ?: throw Error("No Linear Layout")
+        return layout?.let { PagesListViewHolder(it, onClick, getReadingTime) } ?: throw Error("No Linear Layout")
     }
 
     override fun onBindViewHolder(holder: PagesListViewHolder, position: Int) {

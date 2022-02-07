@@ -27,8 +27,12 @@ import io.reactivex.rxjava3.subjects.Subject
 abstract class PagesList : AppCompatActivity() {
     private val pagesList = mutableListOf<Page>()
 
+    private val mrReaderApplication by lazy { application as MRReaderApplication }
+
     private var mAdapter: RecyclerView.Adapter<PagesListViewHolder> =
-        PageResultsAdapter(pagesList) { handleClick(it) }
+        PageResultsAdapter(pagesList, { handleClick(it) }) {
+            getPageReadingTimeByTitle(it)
+        }
 
     protected val api: API by lazy { (application as MRReaderApplication).api }
 
@@ -51,6 +55,17 @@ abstract class PagesList : AppCompatActivity() {
     private var loadingSubscription: Disposable = Disposable.empty()
 
     protected abstract fun getPages(): Observable<List<Page>>
+
+    private fun getPageReadingTimeByTitle(title: String): String {
+        val readingTimeText = resources.getText(R.string.ui_reading_time_text)
+        val readingTimeTextUnknown = resources.getText(R.string.ui_reading_time_unknown)
+        val readingTimeTextUnit = resources.getText(R.string.ui_reading_time_unit)
+        val readingTime = mrReaderApplication.getMetaInfoByPageTitle(title)
+        return readingTime?.let {
+            val minutes = it.readableCharacters / 1500
+            return "$readingTimeText, $readingTimeTextUnit: $minutes"
+        } ?: "$readingTimeText, $readingTimeTextUnit: $readingTimeTextUnknown"
+    }
 
     private fun manageVisibility(loadingState: LoadingState) {
         when (loadingState) {

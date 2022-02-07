@@ -1,14 +1,12 @@
 package com.example.mrakopediareader.api
 
-import java.lang.StringBuilder
-
 class APIURLsImpl : APIURLs {
     companion object {
         const val API = "api"
         const val PAGE = "page"
 
         fun joinPaths(vararg paths: String): String {
-            val joiner = "/";
+            val joiner = "/"
             return paths.joinToString(joiner) {
                 StringBuilder(it).removePrefix(joiner).removeSuffix(joiner).toString()
             }
@@ -55,5 +53,8 @@ class APIURLsImpl : APIURLs {
         return joinPaths(apiURL(), relativePagePath)
     }
 
+    override fun pagesMetaInfo(): String {
+        return joinPaths(apiURL(), "static", "files", "pages-index.json")
+    }
 }
 

@@ -3,19 +3,17 @@ package com.example.mrakopediareader.api
 import android.content.Context
 import com.example.mrakopediareader.api.dto.Category
 import com.example.mrakopediareader.api.dto.Page
+import com.example.mrakopediareader.api.dto.PageMetaInfo
 import com.example.mrakopediareader.api.dto.WebsiteUrl
-import com.example.mrakopediareader.api.parser.CategoryParser
-import com.example.mrakopediareader.api.parser.PageParser
-import com.example.mrakopediareader.api.parser.Parser
-import com.example.mrakopediareader.api.parser.WebsiteURLParser
+import com.example.mrakopediareader.api.parser.*
 import io.reactivex.rxjava3.core.Observable
-import java.util.*
 
 class API(context: Context) {
     private val queue: Queue = Queue(context)
     private val pageParser: Parser<Page> = PageParser()
     private val categoryParser: Parser<Category> = CategoryParser()
     private val websiteUrlParser: Parser<WebsiteUrl> = WebsiteURLParser()
+    private val pageMetainfoParser: Parser<Map<String, PageMetaInfo>> = PageMetaInfoParser()
     private val apiURLs: APIURLs = APIURLsImpl()
 
     fun getFullPagePath(pagePath: String): String =
@@ -53,4 +51,7 @@ class API(context: Context) {
         queue.jsonArrayRequestGET(apiURLs.pageRelated(pageTitle))
             .map(pageParser::fromJsonArray)
 
+    fun getPagesMetaInfoIndex(): Observable<Map<String, PageMetaInfo>> =
+        queue.jsonObjectRequestGET(apiURLs.pagesMetaInfo())
+            .map(pageMetainfoParser::fromJsonObject)
 }
