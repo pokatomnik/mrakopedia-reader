@@ -23,6 +23,9 @@
     <string name="ui_website_url">Открыть на Мракопедии</string>
     <string name="ui_no_items">Поиск не дал результатов</string>
     <string name="ui_search_in_page">Поиск на странице</string>
+    <string name="ui_reading_time_text">Время на прочтение</string>
+    <string name="ui_reading_time_unknown">неизвестно</string>
+    <string name="ui_reading_time_unit">минут</string>
     <!-- API paths -->
     <string name="api_hostname">&hostname;</string>
     <string name="api_legacy_api_hostname">&legacy_hostname;</string>

@@ -46,4 +46,6 @@ interface APIURLs {
      * Based on the relative URL of the page, not Its title, beware.
      */
     fun fullPagePath(relativePagePath: String): String
+
+    fun pagesMetaInfo(): String
 }
