@@ -157,12 +157,18 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         startActivity(intent)
     }
 
+    private fun openExport() {
+        val intent = Intent(baseContext, FavoritesExportActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_random_page -> openRandomPage()
             R.id.nav_categories -> openCategories()
             R.id.nav_favorites -> openFavorites()
             R.id.nav_hotm -> openHotmPages()
+            R.id.nav_export -> openExport()
             R.id.nav_bug_or_enhancement -> startActivity(externalLinks.newIssue())
             R.id.nav_telegram -> startActivity(externalLinks.openTelegram())
             R.id.nav_email -> startActivity(externalLinks.openMailClient())
