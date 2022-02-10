@@ -55,6 +55,7 @@
     <string name="drawer_manu_categories">Список категорий</string>
     <string name="drawer_favorites">Избранное</string>
     <string name="drawer_hotm">Истории месяца</string>
+    <string name="drawer_export">Экспорт</string>
     <string name="drawer_bug_or_enhancement">Я нашел ошибку</string>
     <string name="drawer_contact_telegram">Telegram</string>
     <string name="drawer_contact_email">Email</string>

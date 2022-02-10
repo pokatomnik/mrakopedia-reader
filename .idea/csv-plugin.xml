@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CsvFileAttributes">
+    <option name="attributeMap">
+      <map>
+        <entry key="$USER_HOME$/.cache/Google/AndroidStudio2021.1/device-explorer/Pixel_3a_API_30_x86 [emulator-5554]/sdcard/Download/mrakopedia-reader.favorites (1).csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/.cache/Google/AndroidStudio2021.1/device-explorer/Pixel_3a_API_30_x86 [emulator-5554]/sdcard/Download/mrakopedia-reader.favorites.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
