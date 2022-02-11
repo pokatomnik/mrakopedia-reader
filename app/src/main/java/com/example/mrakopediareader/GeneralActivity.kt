@@ -4,11 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.mrakopediareader.api.dto.Page
@@ -16,12 +20,15 @@ import com.example.mrakopediareader.categorieslist.AllCategories
 import com.example.mrakopediareader.pageslist.FavoritesList
 import com.example.mrakopediareader.pageslist.HOTMList
 import com.example.mrakopediareader.pageslist.SearchResults
+import com.example.mrakopediareader.ui.components.RandomLinks
 import com.example.mrakopediareader.viewpage.ViewPage
 import com.google.android.material.navigation.NavigationView
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private var randomLoaded: List<Page>? = null
+
     private val externalLinks by lazy { ExternalLinks(resources) }
 
     private val api by lazy { (application as MRReaderApplication).api }
@@ -49,6 +56,10 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private var busynessSubscription = Disposable.empty()
 
     private var searchStringChangeSubscription = Disposable.empty()
+
+    private fun handleRandom(random: List<Page>) {
+        randomLoaded = random
+    }
     
     private fun performSearch() {
         val intent = Intent(baseContext, SearchResults::class.java)
@@ -90,6 +101,22 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             .subscribe(::handleSearchStringChange)
 
         editText.addTextChangedListener(SearchTextWatcher(inputSubject::onNext))
+
+        val composeView = ComposeView(this).apply {
+            val existingRandomLoaded = savedInstanceState?.let {
+                val listOfSerialized = it.getStringArrayList(KEY_RANDOM_LOADED)
+                listOfSerialized?.let { serialized ->
+                    serialized.map { pageData -> Page.parse(pageData) }
+                }
+            }
+            layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+            setContent {
+                // We then render a simple Text component from Compose.
+                RandomLinks(api, existingRandomLoaded, { handleRandom(it) }) { openPage(it) }
+            }
+        }
+
+        generalLinearLayout.addView(composeView)
     }
 
     override fun onDestroy() {
@@ -121,7 +148,7 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         searchButton.isEnabled = newSearchString.trim().isNotEmpty()
     }
 
-    private fun handleGetRandomPageSuccess(page: Page) {
+    private fun openPage(page: Page) {
         val intent = Intent(baseContext, ViewPage::class.java)
         intent.putExtra(resources.getString(R.string.pass_page_url), api.getFullPagePath(page.url))
         intent.putExtra(resources.getString(R.string.pass_page_title), page.title)
@@ -139,7 +166,7 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         randomPageSubscription = this.api
             .getRandomPage()
             .doFinally { busynessSubject.onNext(false) }
-            .subscribe(::handleGetRandomPageSuccess, ::handleGetRandomPageFailed)
+            .subscribe(::openPage, ::handleGetRandomPageFailed)
     }
 
     private fun openCategories() {
@@ -175,5 +202,17 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        randomLoaded?.let {
+            val randomSerialized = ArrayList(it.map(Page::serialize))
+            outState.putStringArrayList(KEY_RANDOM_LOADED, randomSerialized)
+        }
+    }
+
+    companion object {
+        const val KEY_RANDOM_LOADED = "KEY_RANDOM_LOADED"
     }
 }
