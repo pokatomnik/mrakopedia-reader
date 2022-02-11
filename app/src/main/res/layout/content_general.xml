@@ -51,10 +51,12 @@
             android:layout_height="wrap_content"
             android:autofillHints="@string/ui_default_search_input"
             android:ems="10"
+            android:hint="@string/ui_speakable_search"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:labelFor="@id/searchText"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A" />
 
         <Button
             android:id="@+id/searchButton"
