@@ -4,13 +4,34 @@ import android.graphics.Bitmap
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.example.mrakopediareader.db.dao.scrollposition.ScrollPosition
+import com.example.mrakopediareader.db.dao.scrollposition.ScrollPositionDao
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 internal class MrakopediaWebViewClient(
+    private val title: String,
+    private val scrollPositionDao: ScrollPositionDao,
     private val scrollPublisher: BehaviorSubject<Int>,
     private val handleLoading: (isLoading: Boolean) -> Unit
 ) :
-    WebViewClient() {
+    WebViewClient(), Disposable {
+
+    private var disposed = false
+
+    private val scrollYSubject = PublishSubject.create<Int>()
+
+    private val scrollPositionSubscription = scrollYSubject
+        .observeOn(Schedulers.io())
+        .debounce(1000, TimeUnit.MILLISECONDS)
+        .distinctUntilChanged()
+        .subscribe {
+            scrollPositionDao.setPosition(ScrollPosition(title, it))
+        }
 
     private val textZoom = TextZoom(100, 50, 200, 10) {
         mWebView?.settings?.textZoom = it
@@ -26,6 +47,13 @@ internal class MrakopediaWebViewClient(
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
         handleLoading(false)
+        Observable
+            .just(scrollPositionDao)
+            .observeOn(Schedulers.io())
+            .map { it.getPosition(title) ?: ScrollPosition(title, 0) }
+            .subscribe {
+                mWebView?.scrollY = it.position
+            }
     }
 
     fun attach(webView: MRWebView): MrakopediaWebViewClient {
@@ -38,6 +66,7 @@ internal class MrakopediaWebViewClient(
         webView.scrollY = scrollPublisher.value ?: 0
         webView.setOnScrollChangeListener { _, _, _, _, _ ->
             scrollPublisher.onNext(webView.scrollY * 100 / webView.maxScrollY)
+            scrollYSubject.onNext(webView.scrollY)
         }
         webView.webViewClient = this
         webView.verticalScrollbarPosition
@@ -87,5 +116,14 @@ internal class MrakopediaWebViewClient(
     fun hide(): MrakopediaWebViewClient {
         mWebView?.visibility = View.INVISIBLE
         return this
+    }
+
+    override fun dispose() {
+        scrollPositionSubscription.dispose()
+        disposed = true
+    }
+
+    override fun isDisposed(): Boolean {
+        return disposed
     }
 }

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.api.dto.PageMetaInfo
-import com.example.mrakopediareader.db.dao.Database
+import com.example.mrakopediareader.db.Database
 
 class MRReaderApplication : Application() {
     private var pagesMetaInfoIndex: Map<String, PageMetaInfo>? = null

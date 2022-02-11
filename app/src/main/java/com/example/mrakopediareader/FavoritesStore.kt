@@ -1,6 +1,6 @@
 package com.example.mrakopediareader
 
-import com.example.mrakopediareader.db.dao.Database
+import com.example.mrakopediareader.db.Database
 import com.example.mrakopediareader.db.dao.favorites.Favorite
 
 class FavoritesStore(private val database: Database) {
