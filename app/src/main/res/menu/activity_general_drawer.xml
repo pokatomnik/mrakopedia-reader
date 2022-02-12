@@ -28,6 +28,7 @@
             android:title="@string/drawer_hotm" />
         <item
             android:id="@+id/nav_export"
+            android:checkable="false"
             android:icon="@drawable/ic_baseline_arrow_downward_24"
             android:title="@string/drawer_export" />
     </group>
