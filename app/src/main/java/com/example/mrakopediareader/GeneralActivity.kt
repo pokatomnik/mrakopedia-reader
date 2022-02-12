@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.api.dto.Page
 import com.example.mrakopediareader.categorieslist.AllCategories
 import com.example.mrakopediareader.pageslist.FavoritesList
@@ -23,15 +24,19 @@ import com.example.mrakopediareader.pageslist.SearchResults
 import com.example.mrakopediareader.ui.components.RandomLinks
 import com.example.mrakopediareader.viewpage.ViewPage
 import com.google.android.material.navigation.NavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var randomLoaded: List<Page>? = null
 
     private val externalLinks by lazy { ExternalLinks(resources) }
 
-    private val api by lazy { (application as MRReaderApplication).api }
+    @Inject
+    lateinit var api: API
 
     private var inputSubject: BehaviorSubject<String> = BehaviorSubject.createDefault("")
 

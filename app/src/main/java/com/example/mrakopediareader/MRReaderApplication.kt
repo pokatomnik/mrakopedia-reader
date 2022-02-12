@@ -1,30 +1,17 @@
 package com.example.mrakopediareader
 
 import android.app.Application
-import androidx.room.Room
-import com.example.mrakopediareader.api.API
-import com.example.mrakopediareader.api.dto.PageMetaInfo
-import com.example.mrakopediareader.db.Database
+import com.example.mrakopediareader.metainfo.PagesMetaInfoSource
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
+@HiltAndroidApp
 class MRReaderApplication : Application() {
-    private var pagesMetaInfoIndex: Map<String, PageMetaInfo>? = null
-
-    val api: API by lazy {
-        API(applicationContext)
-    }
-
-    val database by lazy {
-        Room.databaseBuilder(applicationContext, Database::class.java, "mrreader.db").build()
-    }
+    @Inject
+    lateinit var pagesMetaInfoSource: PagesMetaInfoSource
 
     override fun onCreate() {
         super.onCreate()
-        api.getPagesMetaInfoIndex().subscribe {
-            pagesMetaInfoIndex = it
-        }
-    }
-
-    fun getMetaInfoByPageTitle(title: String): PageMetaInfo? {
-        return pagesMetaInfoIndex?.get(title)
+        pagesMetaInfoSource.init()
     }
 }

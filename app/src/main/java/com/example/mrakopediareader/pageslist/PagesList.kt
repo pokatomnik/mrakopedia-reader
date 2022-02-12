@@ -13,28 +13,33 @@ import androidx.core.app.NavUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mrakopediareader.LoadingState
-import com.example.mrakopediareader.MRReaderApplication
 import com.example.mrakopediareader.R
 import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.api.dto.Page
+import com.example.mrakopediareader.metainfo.PagesMetaInfoSource
 import com.example.mrakopediareader.viewpage.ViewPage
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
+import javax.inject.Inject
 
+@AndroidEntryPoint
 abstract class PagesList : AppCompatActivity() {
-    private val pagesList = mutableListOf<Page>()
+    @Inject
+    lateinit var api: API
 
-    private val mrReaderApplication by lazy { application as MRReaderApplication }
+    @Inject
+    lateinit var pagesMetaInfoSource: PagesMetaInfoSource
+
+    private val pagesList = mutableListOf<Page>()
 
     private var mAdapter: RecyclerView.Adapter<PagesListViewHolder> =
         PageResultsAdapter(pagesList, { handleClick(it) }) {
             getPageReadingTimeByTitle(it)
         }
-
-    protected val api: API by lazy { (application as MRReaderApplication).api }
 
     private val recyclerView by lazy {
         findViewById<RecyclerView>(R.id.pagesListView).apply {
@@ -60,7 +65,7 @@ abstract class PagesList : AppCompatActivity() {
         val readingTimeText = resources.getText(R.string.ui_reading_time_text)
         val readingTimeTextUnknown = resources.getText(R.string.ui_reading_time_unknown)
         val readingTimeTextUnit = resources.getText(R.string.ui_reading_time_unit)
-        val readingTime = mrReaderApplication.getMetaInfoByPageTitle(title)
+        val readingTime = pagesMetaInfoSource.getMetaInfoByPageTitle(title)
         return readingTime?.let {
             val minutes = it.readableCharacters / 1500
             return "$readingTimeText, $readingTimeTextUnit: $minutes"
