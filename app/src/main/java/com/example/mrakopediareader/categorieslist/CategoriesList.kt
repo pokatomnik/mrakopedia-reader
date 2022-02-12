@@ -12,17 +12,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mrakopediareader.*
+import com.example.mrakopediareader.Filterable
+import com.example.mrakopediareader.LoadingState
+import com.example.mrakopediareader.R
+import com.example.mrakopediareader.SearchTextWatcher
 import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.api.dto.Category
 import com.example.mrakopediareader.pageslist.PagesByCategory
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.PublishSubject
-import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 abstract class CategoriesList : AppCompatActivity() {
-    protected val api: API by lazy { (application as MRReaderApplication).api }
+    @Inject
+    lateinit var api: API
 
     private val filteredCategories = mutableListOf<Category>()
 

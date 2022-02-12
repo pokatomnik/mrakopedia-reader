@@ -24,14 +24,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.app.NavUtils
+import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.csvexport.CSVColumn
 import com.example.mrakopediareader.csvexport.CSVSerializer
+import com.example.mrakopediareader.db.Database
 import com.example.mrakopediareader.db.dao.favorites.Favorite
 import com.example.mrakopediareader.ui.theme.MrakopediareaderTheme
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-
+import javax.inject.Inject
 
 class ExportActivityResultContract :
     ActivityResultContract<String, Uri?>() {
@@ -54,12 +57,15 @@ class ExportActivityResultContract :
     }
 }
 
+@AndroidEntryPoint
 class FavoritesExportActivity : ComponentActivity() {
     private val exportingSubject = BehaviorSubject.createDefault(false)
 
-    private val mrReaderApplication by lazy { application as MRReaderApplication }
+    @Inject
+    lateinit var database: Database
 
-    private val api by lazy { mrReaderApplication.api }
+    @Inject
+    lateinit var api: API
 
     private val exportLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ExportActivityResultContract()) {
@@ -135,7 +141,7 @@ class FavoritesExportActivity : ComponentActivity() {
             .doOnNext { exportingSubject.onNext(true) }
             .observeOn(Schedulers.io())
             .map { csvSerializer ->
-                val favoritesDao = mrReaderApplication.database.favoritesDao()
+                val favoritesDao = database.favoritesDao()
                 val favorites = favoritesDao.getAll()
                 csvSerializer.serialize(favorites)
             }

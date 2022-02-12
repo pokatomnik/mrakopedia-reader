@@ -11,27 +11,31 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.example.mrakopediareader.ExternalLinks
 import com.example.mrakopediareader.FavoritesStore
-import com.example.mrakopediareader.MRReaderApplication
 import com.example.mrakopediareader.R
 import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.categorieslist.CategoriesByPage
+import com.example.mrakopediareader.db.Database
 import com.example.mrakopediareader.db.dao.favorites.Favorite
 import com.example.mrakopediareader.linkshare.shareLink
 import com.example.mrakopediareader.pageslist.RelatedList
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ViewPage : AppCompatActivity() {
+    @Inject
+    lateinit var api: API
+
+    @Inject
+    lateinit var database: Database
+
     private val defaultActionbarTitle by lazy {
         supportActionBar?.title
     }
-
-    private val mrReaderApplication by lazy { application as MRReaderApplication }
-
-    private val scrollPositionDao by lazy { mrReaderApplication.database.scrollPositionsDao() }
 
     private val scrollYSubject = BehaviorSubject.createDefault(0)
 
@@ -45,11 +49,8 @@ class ViewPage : AppCompatActivity() {
             }
         }
 
-    private val api: API by lazy { (application as MRReaderApplication).api }
-
     private val mFavoritesStore: FavoritesStore by lazy {
-        val application = application as MRReaderApplication
-        FavoritesStore(application.database)
+        FavoritesStore(database)
     }
 
     private val mViewPagePrefs: ViewPagePrefs? by lazy {
@@ -59,7 +60,7 @@ class ViewPage : AppCompatActivity() {
     private val webViewClient: MrakopediaWebViewClient by lazy {
         MrakopediaWebViewClient(
             mViewPagePrefs?.pageTitle ?: "",
-            scrollPositionDao,
+            database.scrollPositionsDao(),
             scrollYSubject
         ) {
             val progressBar = findViewById<ProgressBar>(R.id.pageLoadingProgressBar)
