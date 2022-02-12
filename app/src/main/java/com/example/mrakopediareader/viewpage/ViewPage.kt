@@ -29,6 +29,10 @@ class ViewPage : AppCompatActivity() {
         supportActionBar?.title
     }
 
+    private val mrReaderApplication by lazy { application as MRReaderApplication }
+
+    private val scrollPositionDao by lazy { mrReaderApplication.database.scrollPositionsDao() }
+
     private val scrollYSubject = BehaviorSubject.createDefault(0)
 
     private val scrollSubscription = scrollYSubject
@@ -53,7 +57,11 @@ class ViewPage : AppCompatActivity() {
     }
 
     private val webViewClient: MrakopediaWebViewClient by lazy {
-        MrakopediaWebViewClient(scrollYSubject) {
+        MrakopediaWebViewClient(
+            mViewPagePrefs?.pageTitle ?: "",
+            scrollPositionDao,
+            scrollYSubject
+        ) {
             val progressBar = findViewById<ProgressBar>(R.id.pageLoadingProgressBar)
             if (it) {
                 webViewClient.hide()
@@ -230,5 +238,6 @@ class ViewPage : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         scrollSubscription.dispose()
+        webViewClient.dispose()
     }
 }
