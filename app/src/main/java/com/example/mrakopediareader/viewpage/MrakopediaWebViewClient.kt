@@ -2,6 +2,8 @@ package com.example.mrakopediareader.viewpage
 
 import android.graphics.Bitmap
 import android.view.View
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.example.mrakopediareader.db.dao.scrollposition.ScrollPosition
@@ -42,6 +44,29 @@ internal class MrakopediaWebViewClient(
         handleLoading(true)
     }
 
+    override fun onReceivedError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        error: WebResourceError?
+    ) {
+        super.onReceivedError(view, request, error)
+        mWebView?.apply {
+            val htmlData = """
+                <!doctype html>
+                <html>
+                  <body>
+                    <div style="height: 100vh; display: flex; align-items: center; justify-content: center">
+                      Невозможно загрузить страницу :(
+                    </div>
+                  </body>
+                </html>
+            """.trimIndent()
+            loadUrl("about:blank")
+            loadDataWithBaseURL(null, htmlData, "text/html", "UTF-8",null)
+            invalidate()
+        }
+    }
+
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
         handleLoading(false)
@@ -61,7 +86,11 @@ internal class MrakopediaWebViewClient(
 
         webView.scrollY = scrollPublisher.value ?: 0
         webView.setOnScrollChangeListener { _, _, _, _, _ ->
-            scrollPublisher.onNext(webView.scrollY * 100 / webView.maxScrollY)
+            scrollPublisher.onNext(
+                if (webView.maxScrollY > 0) {
+                    webView.scrollY * 100 / webView.maxScrollY
+                } else 0
+            )
             scrollYSubject.onNext(webView.scrollY)
         }
         webView.webViewClient = this
