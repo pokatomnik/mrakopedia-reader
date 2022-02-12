@@ -35,7 +35,8 @@ fun RandomLinks(
             api.getRandomPage().onErrorReturn { Page() },
             api.getRandomPage().onErrorReturn { Page() }
         ) { page1, page2, page3 ->
-            listOf(page1, page2, page3).filter { !it.empty() } }
+            listOf(page1, page2, page3).filter { !it.empty() }
+        }
     }
     MrakopediareaderTheme {
         FlowRow {
