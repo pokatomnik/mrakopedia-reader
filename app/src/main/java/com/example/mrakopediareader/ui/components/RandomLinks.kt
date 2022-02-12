@@ -24,13 +24,18 @@ fun RandomLinks(
     onRandomLoaded: (random: List<Page>) -> Unit,
     openPage: (page: Page) -> Unit
 ) {
+    fun Page.empty(): Boolean {
+        return this.title == "" && this.url == ""
+    }
+
     val (randomPages, setRandomPages) = remember { mutableStateOf<List<Page>>(listOf()) }
     val observable = existingRandom?.let { Observable.just(it) } ?: remember {
         Observable.zip(
-            api.getRandomPage(),
-            api.getRandomPage(),
-            api.getRandomPage()
-        ) { page1, page2, page3 -> listOf(page1, page2, page3) }
+            api.getRandomPage().onErrorReturn { Page() },
+            api.getRandomPage().onErrorReturn { Page() },
+            api.getRandomPage().onErrorReturn { Page() }
+        ) { page1, page2, page3 ->
+            listOf(page1, page2, page3).filter { !it.empty() } }
     }
     MrakopediareaderTheme {
         FlowRow {
@@ -41,7 +46,7 @@ fun RandomLinks(
     }
 
     DisposableEffect(LocalLifecycleOwner.current) {
-        val subscription = observable.doOnNext(onRandomLoaded).subscribe(setRandomPages)
+        val subscription = observable.doOnNext(onRandomLoaded).subscribe(setRandomPages) {}
         onDispose(subscription::dispose)
     }
 }

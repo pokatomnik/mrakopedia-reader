@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.example.mrakopediareader.ExternalLinks
@@ -159,7 +160,8 @@ class ViewPage : AppCompatActivity() {
     private fun openMrakopedia() {
         mViewPagePrefs?.let { prefs ->
             api.getWebsiteUrlForPage(prefs.pageTitle)
-                .subscribe { startActivity(ExternalLinks(resources).openWebsiteUrl(it.uri)) }
+                .subscribe ({ startActivity(ExternalLinks(resources).openWebsiteUrl(it.uri)) })
+                { Toast.makeText(this, "Ошибка открытия страницы", Toast.LENGTH_LONG).show() }
         }
     }
 

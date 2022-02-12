@@ -7,8 +7,10 @@ class PagesMetaInfoSource(private val api: API) {
     private var pagesMetaInfoIndex: Map<String, PageMetaInfo>? = null
 
     fun init(): PagesMetaInfoSource {
-        api.getPagesMetaInfoIndex().subscribe {
+        api.getPagesMetaInfoIndex().subscribe ({
             pagesMetaInfoIndex = it
+        }) {
+            pagesMetaInfoIndex = LinkedHashMap()
         }
 
         return this

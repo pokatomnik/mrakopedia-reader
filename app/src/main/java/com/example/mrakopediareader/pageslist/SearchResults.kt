@@ -14,6 +14,6 @@ class SearchResults : PagesList() {
                 .just(searchText)
                 .map { UrlEscapers.urlPathSegmentEscaper().escape(it) }
                 .switchMap(api::searchByText)
-        } ?: Observable.never();
+        } ?: Observable.never()
     }
 }
