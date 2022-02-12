@@ -29,9 +29,7 @@ internal class MrakopediaWebViewClient(
         .observeOn(Schedulers.io())
         .debounce(1000, TimeUnit.MILLISECONDS)
         .distinctUntilChanged()
-        .subscribe {
-            scrollPositionDao.setPosition(ScrollPosition(title, it))
-        }
+        .subscribe ({ scrollPositionDao.setPosition(ScrollPosition(title, it)) }) {}
 
     private val textZoom = TextZoom(100, 50, 200, 10) {
         mWebView?.settings?.textZoom = it
@@ -51,9 +49,7 @@ internal class MrakopediaWebViewClient(
             .just(scrollPositionDao)
             .observeOn(Schedulers.io())
             .map { it.getPosition(title) ?: ScrollPosition(title, 0) }
-            .subscribe {
-                mWebView?.scrollY = it.position
-            }
+            .subscribe ({ mWebView?.scrollY = it.position }) {}
     }
 
     fun attach(webView: MRWebView): MrakopediaWebViewClient {

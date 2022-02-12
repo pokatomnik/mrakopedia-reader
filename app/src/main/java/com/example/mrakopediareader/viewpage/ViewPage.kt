@@ -42,13 +42,13 @@ class ViewPage : AppCompatActivity() {
 
     private val scrollSubscription = scrollYSubject
         .debounce(200, TimeUnit.MILLISECONDS)
-        .subscribe {
+        .subscribe ({
             runOnUiThread {
                 supportActionBar?.apply {
                     title = "$defaultActionbarTitle ${it}%"
                 }
             }
-        }
+        }) {}
 
     private val mFavoritesStore: FavoritesStore by lazy {
         FavoritesStore(database)
