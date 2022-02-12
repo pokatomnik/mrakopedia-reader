@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.example.mrakopediareader.ExternalLinks
@@ -41,13 +42,13 @@ class ViewPage : AppCompatActivity() {
 
     private val scrollSubscription = scrollYSubject
         .debounce(200, TimeUnit.MILLISECONDS)
-        .subscribe {
+        .subscribe ({
             runOnUiThread {
                 supportActionBar?.apply {
                     title = "$defaultActionbarTitle ${it}%"
                 }
             }
-        }
+        }) {}
 
     private val mFavoritesStore: FavoritesStore by lazy {
         FavoritesStore(database)
@@ -159,7 +160,8 @@ class ViewPage : AppCompatActivity() {
     private fun openMrakopedia() {
         mViewPagePrefs?.let { prefs ->
             api.getWebsiteUrlForPage(prefs.pageTitle)
-                .subscribe { startActivity(ExternalLinks(resources).openWebsiteUrl(it.uri)) }
+                .subscribe ({ startActivity(ExternalLinks(resources).openWebsiteUrl(it.uri)) })
+                { Toast.makeText(this, "Ошибка открытия страницы", Toast.LENGTH_LONG).show() }
         }
     }
 

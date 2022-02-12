@@ -1,7 +1,6 @@
 package com.example.mrakopediareader.metainfo
 
 import com.example.mrakopediareader.api.API
-import com.example.mrakopediareader.api.APIModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +12,7 @@ import javax.inject.Singleton
 class MetaInfo {
     @Singleton
     @Provides
-    fun providePagesMetaInfoSource(@APIModule.Companion.DependencyAPI api: API): PagesMetaInfoSource {
+    fun providePagesMetaInfoSource(api: API): PagesMetaInfoSource {
         return PagesMetaInfoSource(api)
     }
 }
