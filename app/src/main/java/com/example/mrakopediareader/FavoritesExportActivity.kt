@@ -38,11 +38,11 @@ import javax.inject.Inject
 
 class ExportActivityResultContract :
     ActivityResultContract<String, Uri?>() {
-    override fun createIntent(context: Context, fileName: String): Intent {
+    override fun createIntent(context: Context, input: String): Intent {
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_CREATE_DOCUMENT
         shareIntent.type = MIME_CSV
-        shareIntent.putExtra(Intent.EXTRA_TITLE, fileName)
+        shareIntent.putExtra(Intent.EXTRA_TITLE, input)
         return shareIntent
     }
 

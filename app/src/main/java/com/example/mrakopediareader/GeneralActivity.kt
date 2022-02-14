@@ -75,7 +75,7 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         startActivity(intent)
     }
 
-    fun handleClick(view: View?) {
+    fun handleClick(@Suppress("UNUSED_PARAMETER") view: View?) {
         performSearch()
     }
 
@@ -161,7 +161,7 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         startActivity(intent)
     }
 
-    private fun handleGetRandomPageFailed(throwable: Throwable) {
+    private fun handleGetRandomPageFailed(@Suppress("UNUSED_PARAMETER") throwable: Throwable) {
         val text = resources.getString(R.string.notification_failed_get_random_page_message)
         Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
     }

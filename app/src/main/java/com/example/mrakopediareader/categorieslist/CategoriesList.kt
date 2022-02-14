@@ -1,5 +1,6 @@
 package com.example.mrakopediareader.categorieslist
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -49,9 +50,9 @@ abstract class CategoriesList : AppCompatActivity() {
 
     private val searchBy by lazy { findViewById<EditText>(R.id.categoriesSearchBy) }
 
-    private val categoryFilter = Filterable<String, Category>("", { search, category ->
+    private val categoryFilter = Filterable<String, Category>("") { search, category ->
         search == "" || category.title.lowercase().contains(search.lowercase())
-    })
+    }
 
     private val loadingSubject  = PublishSubject.create<LoadingState>()
 
@@ -97,6 +98,11 @@ abstract class CategoriesList : AppCompatActivity() {
         }
     }
 
+    /**
+     * The dataset is being completely rebuilt here,
+     * so the warning must be suppressed
+     */
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateFilteredResults(newCategories: Collection<Category>) {
         filteredCategories.clear()
         filteredCategories.addAll(newCategories)

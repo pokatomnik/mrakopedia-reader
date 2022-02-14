@@ -21,8 +21,7 @@ import com.example.mrakopediareader.linkshare.shareLink
 import com.example.mrakopediareader.pageslist.RelatedList
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -33,6 +32,8 @@ class ViewPage : AppCompatActivity() {
 
     @Inject
     lateinit var database: Database
+
+    private val coroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
     private val defaultActionbarTitle by lazy {
         supportActionBar?.title
@@ -107,7 +108,7 @@ class ViewPage : AppCompatActivity() {
     private fun toggleFavorite() {
         mViewPagePrefs?.let {
             val menuItem = mMenu.findItem(R.id.favorites)
-            GlobalScope.launch {
+            coroutineScope.launch {
                 val exists = mFavoritesStore.has(it.pageTitle)
                 if (exists) {
                     mFavoritesStore.remove(it.pageTitle)
@@ -221,7 +222,7 @@ class ViewPage : AppCompatActivity() {
         val menuItem = menu.findItem(R.id.favorites)
 
         mViewPagePrefs?.let {
-            GlobalScope.launch {
+            coroutineScope.launch {
                 val exists = mFavoritesStore.has(it.pageTitle)
                 runOnUiThread {
                     if (exists) {

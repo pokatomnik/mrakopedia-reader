@@ -15,7 +15,7 @@
             android:id="@+id/nav_categories"
             android:checkable="false"
             android:icon="@drawable/ic_category"
-            android:title="@string/drawer_manu_categories" />
+            android:title="@string/drawer_menu_categories" />
         <item
             android:id="@+id/nav_favorites"
             android:checkable="false"

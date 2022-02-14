@@ -1,5 +1,6 @@
 package com.example.mrakopediareader.pageslist
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -102,6 +103,11 @@ abstract class PagesList : AppCompatActivity() {
         }
     }
 
+    /**
+     * The dataset is being completely rebuilt here,
+     * so the warning must be suppressed
+     */
+    @SuppressLint("NotifyDataSetChanged")
     private fun handleResults(newResults: List<Page>) {
         runOnUiThread {
             pagesList.clear()
@@ -110,7 +116,7 @@ abstract class PagesList : AppCompatActivity() {
         }
     }
 
-    private fun handleError(ignored: Throwable) {
+    private fun handleError(@Suppress("UNUSED_PARAMETER") ignored: Throwable) {
         loadingSubject.onNext(LoadingState.HAS_ERROR)
     }
 
