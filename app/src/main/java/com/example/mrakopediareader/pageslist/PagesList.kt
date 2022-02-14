@@ -110,7 +110,7 @@ abstract class PagesList : AppCompatActivity() {
         }
     }
 
-    private fun handleError(ignored: Throwable) {
+    private fun handleError(@Suppress("UNUSED_PARAMETER") ignored: Throwable) {
         loadingSubject.onNext(LoadingState.HAS_ERROR)
     }
 
