@@ -1,5 +1,6 @@
 package com.example.mrakopediareader.categorieslist
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -97,6 +98,11 @@ abstract class CategoriesList : AppCompatActivity() {
         }
     }
 
+    /**
+     * The dataset is being completely rebuilt here,
+     * so the warning must be suppressed
+     */
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateFilteredResults(newCategories: Collection<Category>) {
         filteredCategories.clear()
         filteredCategories.addAll(newCategories)
