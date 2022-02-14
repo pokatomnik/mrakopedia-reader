@@ -1,8 +1,6 @@
 package com.example.mrakopediareader.api.parser
 
 import com.example.mrakopediareader.api.dto.Page
-import kotlin.Throws
-import org.json.JSONException
 import org.json.JSONObject
 
 internal class PageParser : ParserImpl<Page>() {

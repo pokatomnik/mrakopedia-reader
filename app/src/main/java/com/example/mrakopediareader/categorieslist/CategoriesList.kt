@@ -50,9 +50,9 @@ abstract class CategoriesList : AppCompatActivity() {
 
     private val searchBy by lazy { findViewById<EditText>(R.id.categoriesSearchBy) }
 
-    private val categoryFilter = Filterable<String, Category>("", { search, category ->
+    private val categoryFilter = Filterable<String, Category>("") { search, category ->
         search == "" || category.title.lowercase().contains(search.lowercase())
-    })
+    }
 
     private val loadingSubject  = PublishSubject.create<LoadingState>()
 

@@ -14,7 +14,7 @@ fun resolveIntent(
     resources: Resources,
     intent: Intent,
 ): ViewPagePrefs? {
-    val url = intent.data;
+    val url = intent.data
     val encodedPath = url?.encodedPath
 
     val intentPageTitle = intent.getStringExtra(resources.getString(R.string.pass_page_title))

@@ -2,8 +2,6 @@ package com.example.mrakopediareader.api.parser
 
 import android.net.Uri
 import com.example.mrakopediareader.api.dto.WebsiteUrl
-import kotlin.Throws
-import org.json.JSONException
 import org.json.JSONObject
 
 internal class WebsiteURLParser : ParserImpl<WebsiteUrl>() {

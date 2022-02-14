@@ -16,7 +16,7 @@ class MRWebView : WebView {
     val maxScrollY: Int
         get() {
             val computedScrollRange = computeVerticalScrollRange()
-            val height = height;
+            val height = height
 
             return computedScrollRange - height
         }
