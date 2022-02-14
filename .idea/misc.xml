@@ -8,11 +8,16 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.23489583333333333" />
         <entry key="..\:/Users/Danilian/projects/mrakopedia-reader/app/src/main/res/layout/activity_view_page.xml" value="0.13095238095238096" />
         <entry key="..\:/Users/Danilian/projects/mrakopedia-reader/app/src/main/res/layout/content_general.xml" value="0.20260416666666667" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2075" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_downward_24.xml" value="0.2655" />
         <entry key="app/src/main/res/drawable/ic_bug.xml" value="0.2655" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2075" />
+        <entry key="app/src/main/res/layout/activity_categories.xml" value="0.12972972972972974" />
         <entry key="app/src/main/res/layout/activity_general.xml" value="0.2033514492753623" />
+        <entry key="app/src/main/res/layout/activity_pages_list.xml" value="0.12972972972972974" />
         <entry key="app/src/main/res/layout/activity_view_page.xml" value="0.14447463768115942" />
         <entry key="app/src/main/res/layout/app_bar_general.xml" value="0.265625" />
+        <entry key="app/src/main/res/layout/categories_view.xml" value="0.12972972972972974" />
         <entry key="app/src/main/res/layout/content_general.xml" value="0.22" />
         <entry key="app/src/main/res/layout/nav_header_general.xml" value="0.265625" />
         <entry key="app/src/main/res/layout/search_result_view.xml" value="0.5049180327868853" />
