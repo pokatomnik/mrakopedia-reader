@@ -1,5 +1,6 @@
 package com.example.mrakopediareader.viewpage
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -19,11 +20,31 @@ import com.example.mrakopediareader.db.Database
 import com.example.mrakopediareader.db.dao.favorites.Favorite
 import com.example.mrakopediareader.linkshare.shareLink
 import com.example.mrakopediareader.pageslist.RelatedList
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+private fun Menu.setScrollTopChecked(checked: Boolean) {
+    findItem(R.id.display_scroll_top).isChecked = checked
+}
+
+private fun Menu.setFavoriteItemExists(exists: Boolean) {
+    val menuItem = findItem(R.id.favorites)
+    if (exists) {
+        menuItem.setTitle(R.string.ui_add_to_to_favorites)
+        menuItem.setIcon(R.drawable.ic_fav_unselected)
+    } else {
+        menuItem.setTitle(R.string.ui_remove_from_favorites)
+        menuItem.setIcon(R.drawable.ic_fav_selected)
+    }
+}
 
 @AndroidEntryPoint
 class ViewPage : AppCompatActivity() {
@@ -32,6 +53,12 @@ class ViewPage : AppCompatActivity() {
 
     @Inject
     lateinit var database: Database
+
+    private val scrollTopFAB by lazy { findViewById<FloatingActionButton>(R.id.scrollTopFAB) }
+
+    private val preferences by lazy { Preferences(getPreferences(Context.MODE_PRIVATE)) }
+
+    private var scrollTopVisibleDisposable = Disposable.empty()
 
     private val coroutineScope = CoroutineScope(Job() + Dispatchers.IO)
 
@@ -68,15 +95,17 @@ class ViewPage : AppCompatActivity() {
             val progressBar = findViewById<ProgressBar>(R.id.pageLoadingProgressBar)
             if (it) {
                 webViewClient.hide()
+                scrollTopFAB.isEnabled = false
                 progressBar.visibility = View.VISIBLE
             } else {
                 webViewClient.show()
+                scrollTopFAB.isEnabled = true
                 progressBar.visibility = View.INVISIBLE
             }
         }
     }
 
-    private lateinit var mMenu: Menu
+    private var mMenu: Menu? = null
 
     private val searchView: SearchView by lazy { findViewById(R.id.searchView) }
 
@@ -99,6 +128,13 @@ class ViewPage : AppCompatActivity() {
         mViewPagePrefs?.let {
             webViewClient.attach(findViewById(R.id.webView)).loadUrl(it.pageUrl)
         }
+
+        scrollTopVisibleDisposable = preferences.observeScrollTopVisible().subscribe {
+            scrollTopFAB.visibility = if (it) View.VISIBLE else View.INVISIBLE
+            mMenu?.setScrollTopChecked(preferences.scrollTopVisible)
+        }
+
+        scrollTopFAB.setOnClickListener { webViewClient.scrollTop() }
     }
 
     private fun handleShareIntent(intent: Intent?) {
@@ -107,7 +143,6 @@ class ViewPage : AppCompatActivity() {
 
     private fun toggleFavorite() {
         mViewPagePrefs?.let {
-            val menuItem = mMenu.findItem(R.id.favorites)
             coroutineScope.launch {
                 val exists = mFavoritesStore.has(it.pageTitle)
                 if (exists) {
@@ -116,13 +151,7 @@ class ViewPage : AppCompatActivity() {
                     mFavoritesStore.set(Favorite(title = it.pageTitle, url = it.pagePath))
                 }
                 runOnUiThread {
-                    if (exists) {
-                        menuItem.setTitle(R.string.ui_add_to_to_favorites)
-                        menuItem.setIcon(R.drawable.ic_fav_unselected)
-                    } else {
-                        menuItem.setTitle(R.string.ui_remove_from_favorites)
-                        menuItem.setIcon(R.drawable.ic_fav_selected)
-                    }
+                    mMenu?.setFavoriteItemExists(exists)
                 }
             }
         }
@@ -145,16 +174,18 @@ class ViewPage : AppCompatActivity() {
     }
 
     private fun toggleSearchBar() {
-        val searchMenuItem = mMenu.findItem(R.id.search_in_page)
-        val checked = searchMenuItem.isChecked
-        if (checked) {
-            searchMenuItem.isChecked = false
-            searchView.setQuery("", false)
-            searchView.visibility = View.GONE
-        } else {
-            searchMenuItem.isChecked = true
-            searchView.visibility = View.VISIBLE
-            searchView.requestFocus()
+        mMenu?.apply {
+            val searchMenuItem = findItem(R.id.search_in_page)
+            val checked = searchMenuItem.isChecked
+            if (checked) {
+                searchMenuItem.isChecked = false
+                searchView.setQuery("", false)
+                searchView.visibility = View.GONE
+            } else {
+                searchMenuItem.isChecked = true
+                searchView.visibility = View.VISIBLE
+                searchView.requestFocus()
+            }
         }
     }
 
@@ -211,14 +242,18 @@ class ViewPage : AppCompatActivity() {
                 toggleSearchBar()
                 super.onOptionsItemSelected(item)
             }
+            R.id.display_scroll_top -> {
+                preferences.toggleScrollTopVisible()
+                super.onOptionsItemSelected(item)
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         mMenu = menu
-
         menuInflater.inflate(R.menu.view_page_menu, menu)
+        menu.setScrollTopChecked(preferences.scrollTopVisible)
         val menuItem = menu.findItem(R.id.favorites)
 
         mViewPagePrefs?.let {
@@ -243,5 +278,6 @@ class ViewPage : AppCompatActivity() {
         super.onDestroy()
         scrollSubscription.dispose()
         webViewClient.dispose()
+        scrollTopVisibleDisposable.dispose()
     }
 }

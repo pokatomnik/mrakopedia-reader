@@ -19,6 +19,7 @@
     <string name="ui_website_url">Открыть на Мракопедии</string>
     <string name="ui_no_items">Поиск не дал результатов</string>
     <string name="ui_search_in_page">Поиск на странице</string>
+    <string name="ui_display_scroll_top">Прокрутка вверх</string>
     <string name="ui_reading_time_text">Время на прочтение</string>
     <string name="ui_reading_time_unknown">неизвестно</string>
     <string name="ui_reading_time_unit">минут</string>
@@ -55,4 +56,5 @@
     <string name="drawer_open_telegram">https://t.me/johndoefoobar</string>
     <string name="drawer_open_email">mailto:hugefast@gmail.com</string>
     <string name="title_activity_favorites_export">FavoritesExportActivity</string>
+    <string name="scroll_top_speakable">Прокрутить к началу</string>
 </resources>

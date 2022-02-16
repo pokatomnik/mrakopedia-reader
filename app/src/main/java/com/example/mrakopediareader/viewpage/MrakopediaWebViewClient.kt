@@ -143,6 +143,10 @@ internal class MrakopediaWebViewClient(
         return this
     }
 
+    fun scrollTop() {
+        mWebView?.scrollY = 0
+    }
+
     override fun dispose() {
         scrollPositionSubscription.dispose()
         disposed = true
