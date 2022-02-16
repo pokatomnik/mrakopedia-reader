@@ -43,4 +43,8 @@
         android:id="@+id/open_mrakopedia"
         android:title="@string/ui_website_url"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/display_scroll_top"
+        android:checkable="true"
+        android:title="@string/ui_display_scroll_top" />
 </menu>

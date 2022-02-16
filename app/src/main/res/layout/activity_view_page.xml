@@ -17,7 +17,30 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/webView" />
+        app:layout_constraintTop_toTopOf="@+id/webView"
+        tools:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scrollTopFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTintMode="screen"
+        android:clickable="true"
+        android:contentDescription="@string/scroll_top_speakable"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/webView"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_baseline_arrow_drop_up_24"
+        tools:ignore="ImageContrastCheck"
+        tools:visibility="visible" />
 
     <android.widget.SearchView
         android:id="@+id/searchView"
@@ -29,7 +52,8 @@
         app:layout_constraintBottom_toTopOf="@+id/webView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <com.example.mrakopediareader.viewpage.MRWebView
         android:id="@+id/webView"
@@ -39,5 +63,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
