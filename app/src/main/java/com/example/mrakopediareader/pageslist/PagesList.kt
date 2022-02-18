@@ -129,7 +129,6 @@ abstract class PagesList : AppCompatActivity() {
         loadingSubject.onNext(LoadingState.LOADING)
         resultsSubscription = getPages()
             .doOnNext {
-                Log.d("PAGES", "In doOnNext")
                 runOnUiThread {
                     when (it.size) {
                         0 -> loadingSubject.onNext(LoadingState.EMPTY)
