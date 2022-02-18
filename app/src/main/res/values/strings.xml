@@ -20,9 +20,8 @@
     <string name="ui_no_items">Поиск не дал результатов</string>
     <string name="ui_search_in_page">Поиск на странице</string>
     <string name="ui_display_scroll_top">Прокрутка вверх</string>
-    <string name="ui_reading_time_text">Время на прочтение</string>
     <string name="ui_reading_time_unknown">неизвестно</string>
-    <string name="ui_reading_time_unit">минут</string>
+    <string name="ui_reading_time_unit">мин.</string>
     <string name="ui_speakable_search">Поиск по тексту</string>
     <!-- API paths -->
     <string name="api_hostname">&hostname;</string>
