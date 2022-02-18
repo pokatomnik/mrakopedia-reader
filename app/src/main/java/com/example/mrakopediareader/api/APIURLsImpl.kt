@@ -54,7 +54,7 @@ class APIURLsImpl : APIURLs {
     }
 
     override fun pagesMetaInfo(): String {
-        return joinPaths(apiURL(), "static", "files", "pages-index.json")
+        return joinPaths(apiURL(), API, "pages-metainfo")
     }
 }
 

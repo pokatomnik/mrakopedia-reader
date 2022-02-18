@@ -37,10 +37,13 @@ abstract class PagesList : AppCompatActivity() {
 
     private val pagesList = mutableListOf<Page>()
 
-    private var mAdapter: RecyclerView.Adapter<PagesListViewHolder> =
-        PageResultsAdapter(pagesList, { handleClick(it) }) {
-            getPageReadingTimeByTitle(it)
-        }
+    private val mAdapter: RecyclerView.Adapter<PagesListViewHolder> by lazy {
+        PageResultsAdapter(
+            pages = pagesList,
+            resources = resources,
+            getPageMetaInfo = { pagesMetaInfoSource.getMetaInfoByPageTitle(it) }
+        ) { handleClick(it) }
+    }
 
     private val recyclerView by lazy {
         findViewById<RecyclerView>(R.id.pagesListView).apply {
@@ -61,17 +64,6 @@ abstract class PagesList : AppCompatActivity() {
     private var loadingSubscription: Disposable = Disposable.empty()
 
     protected abstract fun getPages(): Observable<List<Page>>
-
-    private fun getPageReadingTimeByTitle(title: String): String {
-        val readingTimeText = resources.getText(R.string.ui_reading_time_text)
-        val readingTimeTextUnknown = resources.getText(R.string.ui_reading_time_unknown)
-        val readingTimeTextUnit = resources.getText(R.string.ui_reading_time_unit)
-        val readingTime = pagesMetaInfoSource.getMetaInfoByPageTitle(title)
-        return readingTime?.let {
-            val minutes = it.readableCharacters / 1500
-            return "$readingTimeText, $readingTimeTextUnit: $minutes"
-        } ?: "$readingTimeText, $readingTimeTextUnit: $readingTimeTextUnknown"
-    }
 
     private fun manageVisibility(loadingState: LoadingState) {
         when (loadingState) {
@@ -137,7 +129,7 @@ abstract class PagesList : AppCompatActivity() {
         loadingSubject.onNext(LoadingState.LOADING)
         resultsSubscription = getPages()
             .doOnNext {
-                Log.d("PAGES","In doOnNext")
+                Log.d("PAGES", "In doOnNext")
                 runOnUiThread {
                     when (it.size) {
                         0 -> loadingSubject.onNext(LoadingState.EMPTY)
