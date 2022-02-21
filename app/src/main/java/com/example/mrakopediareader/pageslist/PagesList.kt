@@ -3,12 +3,9 @@ package com.example.mrakopediareader.pageslist
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import javax.inject.Inject
@@ -34,6 +32,10 @@ abstract class PagesList : AppCompatActivity() {
 
     @Inject
     lateinit var pagesMetaInfoSource: PagesMetaInfoSource
+
+    private val sorter by lazy { PagesSorter(pagesMetaInfoSource) }
+
+    private val sorterSubject = BehaviorSubject.createDefault(PagesSorter.Companion.SortID.ALPHA_ASC)
 
     private val pagesList = mutableListOf<Page>()
 
@@ -53,6 +55,16 @@ abstract class PagesList : AppCompatActivity() {
         }
     }
 
+    private val sortBar by lazy { findViewById<LinearLayout>(R.id.sort_bar) }
+
+    private val buttonSortAlphabetically by lazy { findViewById<ImageButton>(R.id.sort_alphabet) }
+
+    private val buttonSortReadingTime by lazy { findViewById<ImageButton>(R.id.sort_reading_time) }
+
+    private val buttonSortRating by lazy { findViewById<ImageButton>(R.id.sort_rating) }
+
+    private val buttonSortVoted by lazy { findViewById<ImageButton>(R.id.sort_voted) }
+
     private val progressBar by lazy { findViewById<ProgressBar>(R.id.progressBar) }
 
     private val noItems by lazy { findViewById<TextView>(R.id.noItems) }
@@ -69,6 +81,7 @@ abstract class PagesList : AppCompatActivity() {
         when (loadingState) {
             LoadingState.HAS_ERROR -> {
                 recyclerView.visibility = View.INVISIBLE
+                sortBar.visibility = View.INVISIBLE
                 progressBar.visibility = View.INVISIBLE
                 noItems.visibility = View.INVISIBLE
                 Toast.makeText(
@@ -79,16 +92,19 @@ abstract class PagesList : AppCompatActivity() {
             }
             LoadingState.LOADING -> {
                 recyclerView.visibility = View.INVISIBLE
+                sortBar.visibility = View.INVISIBLE
                 progressBar.visibility = View.VISIBLE
                 noItems.visibility = View.INVISIBLE
             }
             LoadingState.EMPTY -> {
                 recyclerView.visibility = View.INVISIBLE
+                sortBar.visibility = View.INVISIBLE
                 progressBar.visibility = View.INVISIBLE
                 noItems.visibility = View.VISIBLE
             }
             LoadingState.HAS_RESULTS -> {
                 recyclerView.visibility = View.VISIBLE
+                sortBar.visibility = View.VISIBLE
                 progressBar.visibility = View.INVISIBLE
                 noItems.visibility = View.INVISIBLE
             }
@@ -127,7 +143,10 @@ abstract class PagesList : AppCompatActivity() {
 
         loadingSubscription = loadingSubject.subscribe { manageVisibility(it) }
         loadingSubject.onNext(LoadingState.LOADING)
-        resultsSubscription = getPages()
+        resultsSubscription = Observable.combineLatest(
+            getPages(),
+            sorterSubject
+        ) { pages, sortID -> sorter.sorted(sortID, pages) }
             .doOnNext {
                 runOnUiThread {
                     when (it.size) {
@@ -138,6 +157,12 @@ abstract class PagesList : AppCompatActivity() {
             }
             .subscribeOn(Schedulers.single())
             .subscribe(::handleResults, ::handleError)
+        with(sorterSubject) {
+            buttonSortAlphabetically.setOnClickListener { onNext(PagesSorter.nextAlpha(sorterSubject.value)) }
+            buttonSortReadingTime.setOnClickListener { onNext(PagesSorter.nextReadingTime(sorterSubject.value)) }
+            buttonSortRating.setOnClickListener { onNext(PagesSorter.nextRating(sorterSubject.value)) }
+            buttonSortVoted.setOnClickListener { onNext(PagesSorter.nextVoted(sorterSubject.value)) }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

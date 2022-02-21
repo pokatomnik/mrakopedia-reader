@@ -23,6 +23,10 @@
     <string name="ui_reading_time_unknown">неизвестно</string>
     <string name="ui_reading_time_unit">мин.</string>
     <string name="ui_speakable_search">Поиск по тексту</string>
+    <string name="description_sort_alphabet">Сортировка по алфавиту</string>
+    <string name="description_sort_reading_time">Сортировка по времени прочтения</string>
+    <string name="description_sort_rating">Сортировка по рейтингу</string>
+    <string name="description_sort_voted">Сортировка по количеству проголосовавших</string>
     <!-- API paths -->
     <string name="api_hostname">&hostname;</string>
     <string name="api_legacy_api_hostname">&legacy_hostname;</string>

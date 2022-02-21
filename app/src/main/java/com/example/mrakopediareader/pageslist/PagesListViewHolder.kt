@@ -13,11 +13,8 @@ class PagesListViewHolder(
     private val layout: LinearLayout,
     private val resources: Resources,
     private val getPageMetaInfo: (title: String) -> PageMetaInfo?,
-    onClick: (page: Page) -> Unit,
-) :
-    RecyclerView.ViewHolder(layout) {
-    private var page: Page? = null
-
+    private val onClick: (page: Page) -> Unit,
+) : RecyclerView.ViewHolder(layout) {
     private fun getPageReadingTimeByTitle(title: String): String {
         val readingTimeTextUnknown = resources.getText(R.string.ui_reading_time_unknown)
         val readingTimeTextUnit = resources.getText(R.string.ui_reading_time_unit)
@@ -39,7 +36,6 @@ class PagesListViewHolder(
     }
 
     fun setPage(pageToSet: Page) {
-        page = pageToSet
         val readingTimeText = getPageReadingTimeByTitle(pageToSet.title)
         val ratingText = getRatingText(pageToSet.title)
         val votedText = getVotedText(pageToSet.title)
@@ -49,19 +45,24 @@ class PagesListViewHolder(
         val ratingTextView = layout.findViewById<TextView>(R.id.rating)
         val votedTextView = layout.findViewById<TextView>(R.id.voted)
 
-        textView.text = pageToSet.title
-        readingTimeTextView.text = readingTimeText
-        ratingText?.let {
-            ratingTextView.visibility = View.VISIBLE
-            ratingTextView.text = it
-        }
-        votedText?.let {
-            votedTextView.visibility = View.VISIBLE
-            votedTextView.text = it
-        }
-    }
+        layout.setOnClickListener { pageToSet.apply(onClick) }
 
-    init {
-        layout.setOnClickListener { page?.apply(onClick) }
+        textView.text = pageToSet.title
+
+        readingTimeTextView.text = readingTimeText
+        if (ratingText == null) {
+            ratingTextView.visibility = View.INVISIBLE
+            ratingTextView.text = null
+        } else {
+            ratingTextView.visibility = View.VISIBLE
+            ratingTextView.text = ratingText
+        }
+        if (votedText == null) {
+            votedTextView.visibility = View.INVISIBLE
+            votedTextView.text = null
+        } else {
+            votedTextView.visibility = View.VISIBLE
+            votedTextView.text = votedText
+        }
     }
 }
