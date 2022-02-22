@@ -129,7 +129,11 @@ abstract class CategoriesList : AppCompatActivity() {
 
         loadingSubject.onNext(LoadingState.LOADING)
 
-        resultSubscription = getCategories()
+        val categoriesObservable = savedInstanceState?.getStringArrayList(KEY_CATEGORIES)?.let {
+            Observable.just(it.map(Category::parse))
+        } ?: getCategories()
+
+        resultSubscription = categoriesObservable
             .doOnNext {
                 when (it.size) {
                     0 -> loadingSubject.onNext(LoadingState.EMPTY)
@@ -137,6 +141,8 @@ abstract class CategoriesList : AppCompatActivity() {
                 }
             }
             .subscribe(this.categoryFilter::updateSource) { loadingSubject.onNext(LoadingState.HAS_ERROR) }
+
+        savedInstanceState?.getString(KEY_SEARCH_VALUE)?.let(categoryFilter::updateSearch)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -146,10 +152,25 @@ abstract class CategoriesList : AppCompatActivity() {
         }
     }
 
+    private fun Collection<Category>.serialize(): ArrayList<String> {
+        return ArrayList(map(Category::serialize))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(KEY_CATEGORIES, categoryFilter.items?.serialize())
+        outState.putString(KEY_SEARCH_VALUE, categoryFilter.searchValue)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         loadingSubscription.dispose()
         resultSubscription.dispose()
         categoryFilterSubscription.dispose()
+    }
+
+    companion object {
+        private const val KEY_CATEGORIES = "KEY_CATEGORIES"
+        private const val KEY_SEARCH_VALUE = "KEY_SEARCH_VALUE"
     }
 }
