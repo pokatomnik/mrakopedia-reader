@@ -35,7 +35,8 @@ abstract class PagesList : AppCompatActivity() {
 
     private val sorter by lazy { PagesSorter(pagesMetaInfoSource) }
 
-    private val sorterSubject = BehaviorSubject.createDefault(PagesSorter.Companion.SortID.ALPHA_ASC)
+    private val sorterSubject =
+        BehaviorSubject.createDefault(PagesSorter.Companion.SortID.ALPHA_ASC)
 
     private val pagesList = mutableListOf<Page>()
 
@@ -143,9 +144,13 @@ abstract class PagesList : AppCompatActivity() {
 
         loadingSubscription = loadingSubject.subscribe { manageVisibility(it) }
         loadingSubject.onNext(LoadingState.LOADING)
+
+        val pagesObservable = savedInstanceState?.getStringArrayList(KEY_PAGES)?.let {
+            Observable.just(it.map(Page::parse))
+        } ?: getPages()
         resultsSubscription = Observable.combineLatest(
-            getPages(),
-            sorterSubject
+            pagesObservable,
+            sorterSubject.distinctUntilChanged()
         ) { pages, sortID -> sorter.sorted(sortID, pages) }
             .doOnNext {
                 runOnUiThread {
@@ -157,9 +162,20 @@ abstract class PagesList : AppCompatActivity() {
             }
             .subscribeOn(Schedulers.single())
             .subscribe(::handleResults, ::handleError)
+        savedInstanceState?.getSerializable(KEY_SORT_ID)?.let {
+            (it as? PagesSorter.Companion.SortID)?.let { savedSortID ->
+                sorterSubject.onNext(savedSortID)
+            }
+        }
         with(sorterSubject) {
             buttonSortAlphabetically.setOnClickListener { onNext(PagesSorter.nextAlpha(sorterSubject.value)) }
-            buttonSortReadingTime.setOnClickListener { onNext(PagesSorter.nextReadingTime(sorterSubject.value)) }
+            buttonSortReadingTime.setOnClickListener {
+                onNext(
+                    PagesSorter.nextReadingTime(
+                        sorterSubject.value
+                    )
+                )
+            }
             buttonSortRating.setOnClickListener { onNext(PagesSorter.nextRating(sorterSubject.value)) }
             buttonSortVoted.setOnClickListener { onNext(PagesSorter.nextVoted(sorterSubject.value)) }
         }
@@ -174,9 +190,24 @@ abstract class PagesList : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun MutableList<Page>.serialize(): ArrayList<String> {
+        return ArrayList(map(Page::serialize))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(KEY_PAGES, pagesList.serialize())
+        outState.putSerializable(KEY_SORT_ID, sorterSubject.value)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         loadingSubscription.dispose()
         resultsSubscription.dispose()
+    }
+
+    companion object {
+        private const val KEY_PAGES = "KEY_PAGES"
+        private const val KEY_SORT_ID = "KEY_SORT_ID"
     }
 }

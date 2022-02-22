@@ -6,7 +6,13 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 class Filterable<S, T>(initial: S, private val filterFn: (search: S, value: T) -> Boolean) {
     private val search: BehaviorSubject<S> = BehaviorSubject.createDefault(initial)
 
+    val searchValue: S?
+        get() = search.value
+
     private val source: BehaviorSubject<Collection<T>> = BehaviorSubject.createDefault(listOf())
+
+    val items: Collection<T>?
+        get() = source.value
 
     val searchResultSubj: Observable<Collection<T>> =
         Observable.combineLatest(search, source) { search, source ->

@@ -1,5 +1,7 @@
 package com.example.mrakopediareader.api
 
+import kotlin.random.Random
+
 class APIURLsImpl : APIURLs {
     companion object {
         const val API = "api"
@@ -22,7 +24,7 @@ class APIURLsImpl : APIURLs {
     }
 
     override fun randomURL(): String {
-        return joinPaths(apiURL(), API, "random")
+        return joinPaths(apiURL(), API, "random?cacheRefreshId=${Random.nextInt()}")
     }
 
     override fun categoriesUrl(): String {

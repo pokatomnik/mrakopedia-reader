@@ -8,7 +8,7 @@ data class Page(val title: String, val url: String) {
     }
 
     companion object {
-        const val JOINER = "|"
+        private const val JOINER = "|"
 
         fun parse(source: String): Page {
             val (title, url) = source.split(JOINER)
