@@ -24,7 +24,7 @@ class APIURLsImpl : APIURLs {
     }
 
     override fun randomURL(): String {
-        return joinPaths(apiURL(), API, "random?random=${Random.nextInt()}")
+        return joinPaths(apiURL(), API, "random?cacheRefreshId=${Random.nextInt()}")
     }
 
     override fun categoriesUrl(): String {
