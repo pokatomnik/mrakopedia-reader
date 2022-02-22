@@ -18,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.api.dto.Page
 import com.example.mrakopediareader.categorieslist.AllCategories
+import com.example.mrakopediareader.metainfo.PagesMetaInfoSource
 import com.example.mrakopediareader.pageslist.FavoritesList
 import com.example.mrakopediareader.pageslist.HOTMList
 import com.example.mrakopediareader.pageslist.SearchResults
@@ -38,6 +39,9 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     @Inject
     lateinit var api: API
 
+    @Inject
+    lateinit var pagesMetaInfoSource: PagesMetaInfoSource
+
     private var inputSubject: BehaviorSubject<String> = BehaviorSubject.createDefault("")
 
     private val busynessSubject = BehaviorSubject.createDefault(false)
@@ -46,11 +50,22 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private val toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
 
-    private val drawer by lazy {findViewById<DrawerLayout>(R.id.drawer_layout) }
+    private val drawer by lazy { findViewById<DrawerLayout>(R.id.drawer_layout) }
 
     private val navigationView by lazy { findViewById<NavigationView>(R.id.nav_view) }
 
-    private val editText by lazy { findViewById<EditText>(R.id.searchText) }
+    private val editText by lazy {
+        findViewById<AutoCompleteTextView>(R.id.searchText).apply {
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    performSearch()
+                    true
+                } else false
+            }
+        }
+    }
+
+    private lateinit var allPageTitlesSuggestionsSubscription: Disposable
 
     private val generalLinearLayout by lazy { findViewById<LinearLayout>(R.id.generalLinearLayout) }
 
@@ -65,7 +80,7 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private fun handleRandom(random: List<Page>) {
         randomLoaded = random
     }
-    
+
     private fun performSearch() {
         val intent = Intent(baseContext, SearchResults::class.java)
         intent.putExtra(
@@ -94,12 +109,16 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         toggle.syncState()
         navigationView.setNavigationItemSelectedListener(this)
 
-        editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch()
-                true
-            } else false
-        }
+        allPageTitlesSuggestionsSubscription = pagesMetaInfoSource
+            .observePageTitles()
+            .subscribe {
+                val adapter = ArrayAdapter(
+                    this@GeneralActivity,
+                    android.R.layout.simple_expandable_list_item_1,
+                    it.toList()
+                )
+                editText.setAdapter(adapter)
+            }
         busynessSubscription = busynessSubject.subscribe(::manageVisibility)
         searchStringChangeSubscription = inputSubject
             .distinctUntilChanged()
@@ -129,6 +148,7 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         searchStringChangeSubscription.dispose()
         randomPageSubscription.dispose()
         busynessSubscription.dispose()
+        allPageTitlesSuggestionsSubscription.dispose()
     }
 
     override fun onBackPressed() {

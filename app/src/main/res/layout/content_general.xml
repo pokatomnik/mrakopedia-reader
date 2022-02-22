@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ui_input_search_caption" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/searchText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
