@@ -3,7 +3,7 @@ package com.example.mrakopediareader
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class Filterable<S, T>(initial: S, private val filterFn: (search: S, value: T) -> Boolean) {
+class Filterable<S : Any, T>(initial: S, private val filterFn: (search: S, value: T) -> Boolean) {
     private val search: BehaviorSubject<S> = BehaviorSubject.createDefault(initial)
 
     val searchValue: S?
@@ -18,6 +18,10 @@ class Filterable<S, T>(initial: S, private val filterFn: (search: S, value: T) -
         Observable.combineLatest(search, source) { search, source ->
             source.filter { filterFn(search, it) }
         }
+
+    fun observeSearch(): Observable<S> {
+        return search
+    }
 
     fun updateSource(newValue: Collection<T>) {
         source.onNext(newValue)

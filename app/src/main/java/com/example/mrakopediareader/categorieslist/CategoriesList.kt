@@ -5,10 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,6 +47,8 @@ abstract class CategoriesList : AppCompatActivity() {
 
     private val searchBy by lazy { findViewById<EditText>(R.id.categoriesSearchBy) }
 
+    private val clearTextButton by lazy { findViewById<ImageButton>(R.id.clear_search) }
+
     private val categoryFilter = Filterable<String, Category>("") { search, category ->
         search == "" || category.title.lowercase().contains(search.lowercase())
     }
@@ -62,7 +61,13 @@ abstract class CategoriesList : AppCompatActivity() {
 
     private var categoryFilterSubscription: Disposable = Disposable.empty()
 
+    private var clearSearchVisibilitySubscription: Disposable = Disposable.empty()
+
     protected abstract fun getCategories(): Observable<List<Category>>
+
+    fun handleClearClick(@Suppress("UNUSED_PARAMETER") view: View?) {
+        searchBy.text.clear()
+    }
 
     private fun manageVisibility(loadingState: LoadingState) {
         when (loadingState) {
@@ -127,6 +132,12 @@ abstract class CategoriesList : AppCompatActivity() {
         categoryFilterSubscription = categoryFilter.searchResultSubj
             .subscribe { updateFilteredResults(it) }
 
+        clearSearchVisibilitySubscription = categoryFilter.observeSearch().map {
+            it != ""
+        }.subscribe {
+            clearTextButton.visibility = if (it) View.VISIBLE else View.GONE
+        }
+
         loadingSubject.onNext(LoadingState.LOADING)
 
         val categoriesObservable = savedInstanceState?.getStringArrayList(KEY_CATEGORIES)?.let {
@@ -167,6 +178,7 @@ abstract class CategoriesList : AppCompatActivity() {
         loadingSubscription.dispose()
         resultSubscription.dispose()
         categoryFilterSubscription.dispose()
+        clearSearchVisibilitySubscription.dispose()
     }
 
     companion object {

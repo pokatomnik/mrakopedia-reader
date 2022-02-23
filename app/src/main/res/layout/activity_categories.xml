@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".categorieslist.AllCategories">
+    tools:context=".categorieslist.CategoriesList">
 
     <TextView
         android:id="@+id/noItems"
@@ -31,20 +31,44 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <EditText
-        android:id="@+id/categoriesSearchBy"
-        android:layout_width="0dp"
+    <FrameLayout
+        android:id="@+id/search_wrapper"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:autofillHints="@string/ui_default_category"
-        android:ems="10"
-        android:hint="@string/ui_category_search_hint"
-        android:inputType="textPersonName"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/categoriesView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextContrastCheck" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
+        <EditText
+            android:id="@+id/categoriesSearchBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/ui_default_category"
+            android:ems="10"
+            android:hint="@string/ui_category_search_hint"
+            android:inputType="textPersonName"
+            android:paddingEnd="24dp"
+            tools:text="ГнильГнильГнильГнильГнильГнильГнильГниль"
+            tools:ignore="RtlSymmetry,TextContrastCheck" />
+
+        <ImageButton
+            android:id="@+id/clear_search"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end|center_vertical"
+            android:adjustViewBounds="true"
+            android:background="@drawable/ic_baseline_clear_24"
+            android:contentDescription="@string/description_clear_search"
+            android:scaleType="center"
+            tools:ignore="TouchTargetSizeCheck"
+            android:visibility="gone"
+            android:onClick="handleClearClick"
+            tools:visibility="visible" />
+    </FrameLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoriesView"
@@ -55,7 +79,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/categoriesSearchBy"
+        app:layout_constraintTop_toBottomOf="@+id/search_wrapper"
         tools:visibility="visible">
 
     </androidx.recyclerview.widget.RecyclerView>
