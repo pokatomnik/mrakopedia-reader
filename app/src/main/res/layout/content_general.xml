@@ -46,18 +46,41 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ui_input_search_caption" />
 
-            <AutoCompleteTextView
-                android:id="@+id/searchText"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="@string/ui_default_search_input"
-                android:ems="10"
-                android:hint="@string/ui_speakable_search"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:maxLines="1"
-                android:minHeight="48dp"
-                android:textColorHint="#546E7A" />
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <AutoCompleteTextView
+                    android:id="@+id/searchText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/ui_default_search_input"
+                    android:ems="10"
+                    android:hint="@string/ui_speakable_search"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:minHeight="48dp"
+                    android:textColorHint="#546E7A"
+                    android:paddingEnd="24dp"
+                    tools:text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+                    tools:ignore="RtlSymmetry" />
+
+                <ImageButton
+                    android:id="@+id/clear_search"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/ic_baseline_clear_24"
+                    android:contentDescription="@string/description_clear_search"
+                    android:scaleType="center"
+                    android:visibility="gone"
+                    android:onClick="handleClearClick"
+                    tools:ignore="TouchTargetSizeCheck"
+                    tools:visibility="visible" />
+            </FrameLayout>
 
             <Button
                 android:id="@+id/searchButton"
@@ -66,7 +89,6 @@
                 android:onClick="handleClick"
                 android:text="@string/ui_button_search"
                 tools:ignore="TextContrastCheck" />
-
         </LinearLayout>
     </ScrollView>
 

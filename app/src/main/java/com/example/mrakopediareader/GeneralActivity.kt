@@ -42,7 +42,9 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     @Inject
     lateinit var pagesMetaInfoSource: PagesMetaInfoSource
 
-    private var inputSubject: BehaviorSubject<String> = BehaviorSubject.createDefault("")
+    private val inputSubject: BehaviorSubject<String> = BehaviorSubject.createDefault("")
+
+    private val buttonClearSearch by lazy { findViewById<ImageButton>(R.id.clear_search) }
 
     private val busynessSubject = BehaviorSubject.createDefault(false)
 
@@ -77,6 +79,8 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private var searchStringChangeSubscription = Disposable.empty()
 
+    private var clearSearchVisibilitySubscription = Disposable.empty()
+
     private fun handleRandom(random: List<Page>) {
         randomLoaded = random
     }
@@ -92,6 +96,10 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     fun handleClick(@Suppress("UNUSED_PARAMETER") view: View?) {
         performSearch()
+    }
+
+    fun handleClearClick(@Suppress("UNUSED_PARAMETER") view: View?) {
+        editText.text.clear()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,6 +132,10 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             .distinctUntilChanged()
             .subscribe(::handleSearchStringChange)
 
+        inputSubject.map { it != "" }.subscribe {
+            buttonClearSearch.visibility = if (it) View.VISIBLE else View.GONE
+        }
+
         editText.addTextChangedListener(SearchTextWatcher(inputSubject::onNext))
 
         val composeView = ComposeView(this).apply {
@@ -149,6 +161,7 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         randomPageSubscription.dispose()
         busynessSubscription.dispose()
         allPageTitlesSuggestionsSubscription.dispose()
+        clearSearchVisibilitySubscription.dispose()
     }
 
     override fun onBackPressed() {
