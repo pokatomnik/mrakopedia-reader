@@ -7,11 +7,12 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 
 internal class MrakopediaWebViewClient(
-    private val handleLoading: (isLoading: Boolean) -> Unit
+    private val onStartLoading: () -> Unit,
+    private val onFinishLoading: () -> Unit
 ) : WebViewClient() {
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
-        handleLoading(true)
+        onStartLoading()
     }
 
     override fun onReceivedError(
@@ -38,6 +39,7 @@ internal class MrakopediaWebViewClient(
     }
 
     override fun onPageFinished(view: WebView, url: String) {
-        handleLoading(false)
+        super.onPageFinished(view, url)
+        onFinishLoading()
     }
 }

@@ -86,20 +86,20 @@ class ViewPage : AppCompatActivity() {
 
     private val webView by lazy {
         findViewById<MRWebView>(R.id.webView).apply {
-            webViewClient = MrakopediaWebViewClient {
-                if (it) {
+            webViewClient = MrakopediaWebViewClient(
+                onStartLoading = {
                     hide()
                     scrollTopFAB.isEnabled = false
                     progressBar.visibility = View.VISIBLE
-                } else {
+                },
+                onFinishLoading = {
                     show()
                     scrollTopFAB.isEnabled = true
                     progressBar.visibility = View.INVISIBLE
-
                     scrollPositionRestorationDisposable = restoreScrollPosition()
                         .subscribe { (_, position) -> scrollY = position }
                 }
-            }
+            )
         }
     }
 
@@ -227,7 +227,7 @@ class ViewPage : AppCompatActivity() {
     private fun openMrakopedia() {
         mViewPagePrefs?.let { prefs ->
             api.getWebsiteUrlForPage(prefs.pageTitle)
-                .subscribe ({ startActivity(ExternalLinks(resources).openWebsiteUrl(it.uri)) })
+                .subscribe({ startActivity(ExternalLinks(resources).openWebsiteUrl(it.uri)) })
                 { Toast.makeText(this, "Ошибка открытия страницы", Toast.LENGTH_LONG).show() }
         }
     }
