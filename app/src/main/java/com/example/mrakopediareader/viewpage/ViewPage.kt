@@ -197,7 +197,7 @@ class ViewPage : AppCompatActivity() {
                 .just(viewPagePrefs)
                 .observeOn(Schedulers.io())
                 .map {
-                    Recent(it.pageTitle, it.pageUrl, Calendar.getInstance().time.time)
+                    Recent(it.pageTitle, it.pagePath, Calendar.getInstance().time.time)
                 }
                 .subscribe {
                     database.recentDao().upsert(it)

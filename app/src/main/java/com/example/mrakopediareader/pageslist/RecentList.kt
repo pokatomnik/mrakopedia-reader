@@ -1,6 +1,5 @@
 package com.example.mrakopediareader.pageslist
 
-import com.example.mrakopediareader.FavoritesStore
 import com.example.mrakopediareader.api.dto.Page
 import com.example.mrakopediareader.db.Database
 import dagger.hilt.android.AndroidEntryPoint
@@ -11,22 +10,27 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FavoritesList : PagesList() {
+class RecentList : PagesList() {
     @Inject
     lateinit var database: Database
 
     override fun getPages(): Observable<List<Page>> = runBlocking {
-        val favoritesStore = FavoritesStore(database)
-
         val pages = withContext(Dispatchers.IO) {
-            favoritesStore.getAll()
-                .sortedWith { a, b ->
-                    a.title.lowercase().compareTo(b.title.lowercase())
-                }
-                .map { favorite ->
-                    Page(favorite.title, favorite.url)
+            database.recentDao().getAll()
+                .sortedWith { a, b -> (b.opened - a.opened).toInt() }
+                .map { recent ->
+                    Page(recent.title, recent.url)
                 }
         }
+
         Observable.just(pages)
+    }
+
+    override fun pagesSorted(sortID: PagesSorter.Companion.SortID, pages: List<Page>): List<Page> {
+        return pages
+    }
+
+    override fun isSortButtonsVisible(): Boolean {
+        return false
     }
 }
