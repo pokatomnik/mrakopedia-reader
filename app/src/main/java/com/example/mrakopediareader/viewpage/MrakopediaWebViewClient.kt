@@ -9,9 +9,6 @@ import android.webkit.WebViewClient
 internal class MrakopediaWebViewClient(
     private val handleLoading: (isLoading: Boolean) -> Unit
 ) : WebViewClient() {
-
-    private var mWebView: MRWebView? = null
-
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         handleLoading(true)
@@ -23,7 +20,7 @@ internal class MrakopediaWebViewClient(
         error: WebResourceError?
     ) {
         super.onReceivedError(view, request, error)
-        mWebView?.apply {
+        view?.apply {
             val htmlData = """
                 <!doctype html>
                 <html>
