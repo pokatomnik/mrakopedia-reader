@@ -21,6 +21,7 @@ import com.example.mrakopediareader.categorieslist.AllCategories
 import com.example.mrakopediareader.metainfo.PagesMetaInfoSource
 import com.example.mrakopediareader.pageslist.FavoritesList
 import com.example.mrakopediareader.pageslist.HOTMList
+import com.example.mrakopediareader.pageslist.RecentList
 import com.example.mrakopediareader.pageslist.SearchResults
 import com.example.mrakopediareader.ui.components.RandomLinks
 import com.example.mrakopediareader.viewpage.ViewPage
@@ -217,6 +218,11 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         startActivity(intent)
     }
 
+    private fun openRecent() {
+        val intent = Intent(baseContext, RecentList::class.java)
+        startActivity(intent)
+    }
+
     private fun openHotmPages() {
         val intent = Intent(baseContext, HOTMList::class.java)
         startActivity(intent)
@@ -232,6 +238,7 @@ class GeneralActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.nav_random_page -> openRandomPage()
             R.id.nav_categories -> openCategories()
             R.id.nav_favorites -> openFavorites()
+            R.id.nav_recent -> openRecent()
             R.id.nav_hotm -> openHotmPages()
             R.id.nav_export -> openExport()
             R.id.nav_bug_or_enhancement -> startActivity(externalLinks.newIssue())

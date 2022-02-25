@@ -52,6 +52,7 @@
     <string name="drawer_menu_random_page">Случайная страница</string>
     <string name="drawer_menu_categories">Список категорий</string>
     <string name="drawer_favorites">Избранное</string>
+    <string name="drawer_recent">История</string>
     <string name="drawer_hotm">Истории месяца</string>
     <string name="drawer_export">Экспорт</string>
     <string name="drawer_bug_or_enhancement">Я нашел ошибку</string>

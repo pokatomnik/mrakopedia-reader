@@ -105,7 +105,7 @@ abstract class PagesList : AppCompatActivity() {
             }
             LoadingState.HAS_RESULTS -> {
                 recyclerView.visibility = View.VISIBLE
-                sortBar.visibility = View.VISIBLE
+                sortBar.visibility = if (isSortButtonsVisible()) View.VISIBLE else View.GONE
                 progressBar.visibility = View.INVISIBLE
                 noItems.visibility = View.INVISIBLE
             }
@@ -137,6 +137,14 @@ abstract class PagesList : AppCompatActivity() {
         startActivity(intent)
     }
 
+    protected open fun pagesSorted(sortID: PagesSorter.Companion.SortID, pages: List<Page>): List<Page> {
+        return sorter.sorted(sortID, pages)
+    }
+
+    protected open fun isSortButtonsVisible(): Boolean {
+        return true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pages_list)
@@ -151,7 +159,7 @@ abstract class PagesList : AppCompatActivity() {
         resultsSubscription = Observable.combineLatest(
             pagesObservable,
             sorterSubject.distinctUntilChanged()
-        ) { pages, sortID -> sorter.sorted(sortID, pages) }
+        ) { pages, sortID ->  pagesSorted(sortID, pages) }
             .doOnNext {
                 runOnUiThread {
                     when (it.size) {

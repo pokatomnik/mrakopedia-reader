@@ -18,6 +18,7 @@ import com.example.mrakopediareader.api.API
 import com.example.mrakopediareader.categorieslist.CategoriesByPage
 import com.example.mrakopediareader.db.Database
 import com.example.mrakopediareader.db.dao.favorites.Favorite
+import com.example.mrakopediareader.db.dao.recent.Recent
 import com.example.mrakopediareader.db.dao.scrollposition.ScrollPosition
 import com.example.mrakopediareader.linkshare.shareLink
 import com.example.mrakopediareader.pageslist.RelatedList
@@ -32,6 +33,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.sql.Timestamp
+import java.time.Instant
+import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -187,6 +191,18 @@ class ViewPage : AppCompatActivity() {
         }
 
         scrollTopFAB.setOnClickListener { webView.scrollTop() }
+
+        mViewPagePrefs?.let { viewPagePrefs ->
+            Observable
+                .just(viewPagePrefs)
+                .observeOn(Schedulers.io())
+                .map {
+                    Recent(it.pageTitle, it.pagePath, Calendar.getInstance().time.time)
+                }
+                .subscribe {
+                    database.recentDao().upsert(it)
+                }
+        }
     }
 
     private fun handleShareIntent(intent: Intent?) {
