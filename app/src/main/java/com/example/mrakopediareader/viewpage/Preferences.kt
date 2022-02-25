@@ -32,7 +32,19 @@ class Preferences(private val sharedPreferences: SharedPreferences) {
         return scrollTopObservable
     }
 
+    val darkModeEnabled: Boolean
+        get() = sharedPreferences.getBoolean(KEY_DARK_MODE_ENABLED, false)
+
+    fun setDarkModeEnabled(enabled: Boolean) {
+        sharedPreferences.edit().putBoolean(KEY_DARK_MODE_ENABLED, enabled).apply()
+    }
+
+    fun toggleDarkModeEnabled() {
+        sharedPreferences.edit().putBoolean(KEY_DARK_MODE_ENABLED, !darkModeEnabled).apply()
+    }
+
     companion object {
         const val KEY_SCROLL_TOP = "KEY_SCROLL_TOP"
+        const val KEY_DARK_MODE_ENABLED = "KEY_DARK_MODE_ENABLED"
     }
 }
