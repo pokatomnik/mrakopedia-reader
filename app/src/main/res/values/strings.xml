@@ -17,6 +17,7 @@
     <string name="ui_related">См. также</string>
     <string name="ui_categories_by_page">Категории</string>
     <string name="ui_website_url">Открыть на Мракопедии</string>
+    <string name="ui_toggle_dark_mode">Темный режим</string>
     <string name="ui_no_items">Поиск не дал результатов</string>
     <string name="ui_search_in_page">Поиск на странице</string>
     <string name="ui_display_scroll_top">Прокрутка вверх</string>

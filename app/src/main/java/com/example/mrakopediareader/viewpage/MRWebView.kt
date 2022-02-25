@@ -56,4 +56,9 @@ class MRWebView : WebView {
     fun scrollTop() {
         scrollY = 0
     }
+
+    fun loadUrl(url: String, darkMode: Boolean) {
+        val actualUrl = if (darkMode) "$url/dark" else url
+        super.loadUrl(actualUrl)
+    }
 }

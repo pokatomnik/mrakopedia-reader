@@ -33,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 private fun Menu.setScrollTopChecked(checked: Boolean) {
@@ -48,6 +49,11 @@ private fun Menu.setFavoriteItemExists(exists: Boolean) {
         menuItem.setTitle(R.string.ui_remove_from_favorites)
         menuItem.setIcon(R.drawable.ic_fav_selected)
     }
+}
+
+private fun Menu.setDarkModeChecked(darkMode: Boolean) {
+    val menuItem = findItem(R.id.toggle_dark_mode)
+    menuItem.isChecked = darkMode
 }
 
 @AndroidEntryPoint
@@ -84,15 +90,23 @@ class ViewPage : AppCompatActivity() {
 
     private val scrollYPercentSubject = BehaviorSubject.createDefault(0)
 
+    /**
+     * Prevents scroll reset when the loading is in progress
+     * Atomic, because multiple threads are writing to It
+     */
+    private val scrollListenersEnabled = AtomicBoolean(false)
+
     private val webView by lazy {
         findViewById<MRWebView>(R.id.webView).apply {
             webViewClient = MrakopediaWebViewClient(
                 onStartLoading = {
+                    scrollListenersEnabled.set(false)
                     hide()
                     scrollTopFAB.isEnabled = false
                     progressBar.visibility = View.VISIBLE
                 },
                 onFinishLoading = {
+                    scrollListenersEnabled.set(true)
                     show()
                     scrollTopFAB.isEnabled = true
                     progressBar.visibility = View.INVISIBLE
@@ -103,7 +117,9 @@ class ViewPage : AppCompatActivity() {
         }
     }
 
-    private val scrollYSubscription = scrollYSubject.observeOn(Schedulers.io())
+    private val scrollYSubscription = scrollYSubject
+        .filter { scrollListenersEnabled.get() }
+        .observeOn(Schedulers.io())
         .debounce(2000, TimeUnit.MILLISECONDS)
         .distinctUntilChanged()
         .subscribe { scrollY ->
@@ -113,6 +129,7 @@ class ViewPage : AppCompatActivity() {
         }
 
     private val scrollPercentSubscription = scrollYPercentSubject
+        .filter { scrollListenersEnabled.get() }
         .onErrorReturn { 0 }
         .debounce(200, TimeUnit.MILLISECONDS)
         .subscribe {
@@ -161,7 +178,7 @@ class ViewPage : AppCompatActivity() {
                 scrollYPercentSubject.onNext(if (webView.maxScrollY > 0) webView.scrollY * 100 / webView.maxScrollY else 0)
                 scrollYSubject.onNext(webView.scrollY)
             }
-            webView.loadUrl(viewPagePrefs.pageUrl)
+            webView.loadUrl(viewPagePrefs.pageUrl, preferences.darkModeEnabled)
         }
 
         scrollTopVisibleDisposable = preferences.observeScrollTopVisible().subscribe {
@@ -281,6 +298,12 @@ class ViewPage : AppCompatActivity() {
                 preferences.toggleScrollTopVisible()
                 super.onOptionsItemSelected(item)
             }
+            R.id.toggle_dark_mode -> {
+                preferences.toggleDarkModeEnabled()
+                mViewPagePrefs?.let { webView.loadUrl(it.pageUrl, preferences.darkModeEnabled) }
+                mMenu?.setDarkModeChecked(preferences.darkModeEnabled)
+                super.onOptionsItemSelected(item)
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -289,6 +312,7 @@ class ViewPage : AppCompatActivity() {
         mMenu = menu
         menuInflater.inflate(R.menu.view_page_menu, menu)
         menu.setScrollTopChecked(preferences.scrollTopVisible)
+        menu.setDarkModeChecked(preferences.darkModeEnabled)
         val menuItem = menu.findItem(R.id.favorites)
 
         mViewPagePrefs?.let {

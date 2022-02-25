@@ -47,4 +47,8 @@
         android:id="@+id/display_scroll_top"
         android:checkable="true"
         android:title="@string/ui_display_scroll_top" />
+    <item
+        android:id="@+id/toggle_dark_mode"
+        android:checkable="true"
+        android:title="@string/ui_toggle_dark_mode" />
 </menu>
