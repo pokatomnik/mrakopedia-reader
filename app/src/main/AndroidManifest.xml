@@ -15,7 +15,6 @@
             android:name=".FavoritesExportActivity"
             android:exported="false"
             android:label="@string/title_activity_favorites_export"
-            android:theme="@style/AppTheme"
             android:parentActivityName=".GeneralActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
